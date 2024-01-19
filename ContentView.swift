@@ -15,7 +15,6 @@ struct ContentView: View {
     @State private var showAlert = false
     @State private var errorMessage = ""
     @State private var authenticated = false
-  
     @State private var isLoading = false
 
     var body: some View {
@@ -23,28 +22,25 @@ struct ContentView: View {
             ZStack {
                 VStack {
                     Form {
-                        Section(header: Text("🗝 User Credentials")) {
-                            TextField("Username", text: $username)
-                                .disabled(authenticated)
-                                .autocapitalization(.none)
-                                .frame(height: 40)
-
-                            SecureField("Password", text: $password)
-                                .disabled(authenticated)
-                                .frame(height: 40)
-
-                            TextField("Server", text: $server)
-                                .disabled(authenticated)
-                                .autocapitalization(.none)
-                                .frame(height: 40)
-                        }
-
-                        HStack {
-                            if authenticated == false {
-                                Button("Login") {
+                        if authenticated == false {
+                            Section(header: Text("🗝 Enter Credentials")) {
+                                TextField("Username", text: $username)
+                                    .disabled(authenticated)
+                                    .autocapitalization(.none)
+                                    .frame(height: 40)
+                                
+                                SecureField("Password", text: $password)
+                                    .disabled(authenticated)
+                                    .frame(height: 40)
+                                
+                                TextField("Server", text: $server)
+                                    .disabled(authenticated)
+                                    .autocapitalization(.none)
+                                    .frame(height: 40)
+                                
+                                Button("Login \(errorMessage)") {
                                     authenticate()
                                 }
-                                
                                 .disabled(authenticated)
                                 .padding()
                                 .background(
@@ -54,28 +50,24 @@ struct ContentView: View {
                                         endPoint: .trailing
                                     )
                                 )
+                                .frame(minWidth: 0, maxWidth: .infinity)
                                 .foregroundColor(.white)
                                 .clipShape(RoundedRectangle(cornerRadius: 6))
                                 .shadow(color: Color.gray.opacity(0.5), radius: 3, x: 0, y: 1)
                                 .font(.headline)
                                 
-                                Spacer()
-                                
-                            }}
-                        .multilineTextAlignment(TextAlignment .center)
-                        //if token == token {
-                        Spacer()
-                        if authenticated {
-                            Text("Login Successful, welcome \(username)")
+                            }
+                        } else {
+
+                            Text("Login Successful, welcome \(username)!")
                                 .foregroundColor(.green)
-                                
-                                
+                            
                             NavigationLink("👩🏻‍💻 Tag Central", destination: TagListView(username: username,server: server, token: token ?? ""))
                                 .foregroundColor(.blue)
                             
                             NavigationLink("🏷️ Tag Inventory", destination: TagDetailView(username: username,server: server, token: token ?? "", option: "ALL"))
                                 .foregroundColor(.blue)
-                        
+                            
                             NavigationLink("⚠️ Tag Alerts", destination: TagDetailView(username: username,server: server, token: token ?? "", option: "LOST"))
                                 .foregroundColor(.blue)
                         }
@@ -131,7 +123,7 @@ struct ContentView: View {
                 isLoading = false
 
                 guard let data = data, error == nil else {
-                    errorMessage = "Invalid username or password"
+                    errorMessage = "Login Failed"
                     showAlert = true
                     return
                 }
@@ -145,20 +137,27 @@ struct ContentView: View {
                             self.authenticated = true
                         }
                     } else {
-                        errorMessage = "Invalid response from server"
+                        errorMessage = " Failed"
                         showAlert = true
                     }
                 } catch {
-                    errorMessage = "Failed to parse JSON response"
+                    errorMessage = " Failed"
                     showAlert = true
                 }
             }.resume()
         } catch {
-            errorMessage = "Failed to create JSON data"
+            errorMessage = " Failed"
             showAlert = true
         }
     }
 }
+
+extension ContentView {
+    func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+}
+
 struct CircleLink: View {
     let text: String
     let count: String
@@ -267,7 +266,7 @@ struct TagListView: View {
                                             Text("Tag Health: \(percentage)%")
                                                 .font(.system(size: 18))
                                                 .bold()
-                                                .foregroundColor(.white)
+                                                .foregroundColor(.black)
                                         }
                                     }
                                     .padding()
@@ -322,7 +321,7 @@ struct TagListView: View {
         switch percentage {
         case 0..<50:
             return .red
-        case 50..<79:
+        case 50..<70:
             return .yellow
         default:
             return .green
