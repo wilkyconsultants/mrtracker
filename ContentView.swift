@@ -1,9 +1,11 @@
 //
 //  ContentView.swift
-//  MR Tracker - IOS front end 
-//  2024-01-20 - Version 1.2 - with toolbar implemented
+//  MR Tracker - IOS front end
 //
 //  Created by Rob Wilkinson on 2024-01-20.
+//  2024-01-20 - Version 1.2 - with toolbar implemented
+//  2024-01-20 - Version 1.3 - with date selection implemented
+//
 //
 
 import SwiftUI
@@ -75,7 +77,7 @@ struct ContentView: View {
                                                     .aspectRatio(contentMode: .fit)
                                                 Text("Minimize")
                                                     .font(.body)
-                                                    .foregroundColor(.black)
+                                                    .foregroundColor(.blue)
                                             }
                                         }
                                         NavigationLink(destination: InfoView()) {
@@ -86,7 +88,7 @@ struct ContentView: View {
                                                     .aspectRatio(contentMode: .fit)
                                                 Text("Information")
                                                     .font(.body)
-                                                    .foregroundColor(.black)
+                                                    .foregroundColor(.blue)
                                             }
                                         }
                                         NavigationLink(destination: TermsView()) {
@@ -97,7 +99,7 @@ struct ContentView: View {
                                                     .aspectRatio(contentMode: .fit)
                                                 Text("Terms & Conditions")
                                                     .font(.body)
-                                                    .foregroundColor(.black)
+                                                    .foregroundColor(.blue)
                                             }
                                     }
                                   }
@@ -118,7 +120,7 @@ struct ContentView: View {
                                         .aspectRatio(contentMode: .fit)
                                             Text("Main")
                                                 .font(.body)
-                                                .foregroundColor(.black)
+                                                .foregroundColor(.blue)
                                 }
                             }
                             NavigationLink(destination: TagDetailView(username: username,server: server, token: token ?? "", option: "ALL")) {
@@ -129,7 +131,7 @@ struct ContentView: View {
                                         .aspectRatio(contentMode: .fit)
                                             Text("All")
                                                 .font(.body)
-                                                .foregroundColor(.black)
+                                                .foregroundColor(.blue)
                                 }
                             }
                             NavigationLink(destination: TagDetailView(username: username,server: server, token: token ?? "", option: "ACTIVE")) {
@@ -140,7 +142,7 @@ struct ContentView: View {
                                         .aspectRatio(contentMode: .fit)
                                             Text("Active")
                                                 .font(.body)
-                                                .foregroundColor(.black)
+                                                .foregroundColor(.blue)
                                 }
                             }
                             NavigationLink(destination: TagDetailView(username: username,server: server, token: token ?? "", option: "AWAY")) {
@@ -151,7 +153,7 @@ struct ContentView: View {
                                         .aspectRatio(contentMode: .fit)
                                             Text("Away")
                                                 .font(.body)
-                                                .foregroundColor(.black)
+                                                .foregroundColor(.blue)
                                 }
                             }
                             NavigationLink(destination: TagDetailView(username: username,server: server, token: token ?? "", option: "LOST")) {
@@ -162,7 +164,7 @@ struct ContentView: View {
                                         .aspectRatio(contentMode: .fit)
                                             Text("Lost")
                                                 .font(.body)
-                                                .foregroundColor(.black)
+                                                .foregroundColor(.blue)
                                 }
                             }
                             NavigationLink(destination: TagDetailView(username: username,server: server, token: token ?? "", option: "BATTERY_WEAK")) {
@@ -173,7 +175,7 @@ struct ContentView: View {
                                         .aspectRatio(contentMode: .fit)
                                             Text("Battery")
                                                 .font(.body)
-                                                .foregroundColor(.black)
+                                                .foregroundColor(.blue)
                                 }
                             }
                             
@@ -695,18 +697,68 @@ struct CommentDetailView: View {
     @State private var travelTime: String?
     @State private var home_lat: Double?
     @State private var home_long: Double?
+    
+    //@State private var selectedDate = Date()
+    @State private var selectedDate: Date = Date()
+    @State private var isDatePickerVisible = false
 
     private let gradient = LinearGradient(colors: [.red, .orange], startPoint: .leading, endPoint: .trailing)
     private let stroke = StrokeStyle(lineWidth: 5, lineCap: .round, lineJoin: .round, dash: [8, 8])
-
+    
+    //@State private var region: MKCoordinateRegion?
+    
     var home: CLLocationCoordinate2D { CLLocationCoordinate2D(latitude: 43.8382, longitude: -79.3001) }
 
     var body: some View {
+        var currentDate: String {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            return dateFormatter.string(from: Date())
+        }
         VStack {
-            Text("As of: \(formattedCurrentDate)")
+            //Text("As of: \(formattedCurrentDate)")
+            Text("Data for: \(formattedSelectedDate)")
+                .bold()
+                .foregroundColor(Color.blue)
             if let firstLocation = locations.first {
                 Text("📍\(firstLocation.address)")
-                Text("\(marker)\(ago): Travelled \(distance)km to home")
+            }
+            // the marker is only value for current data ie. todays date
+            if currentDate == formattedSelectedDate {
+                if let firstLocation = locations.first {
+                    Text("\(marker)\(ago): Travelled \(distance)km to home")
+                }
+            }
+            //Text("\(currentDate) vs \(formattedSelectedDate)")
+            HStack {
+                Button("Toggle Date Select") {
+                    isDatePickerVisible.toggle()
+                }
+                //.padding()
+                .background(Color.blue)
+                .foregroundColor(.white)
+                .cornerRadius(8)
+                .padding(.horizontal, 20)
+                .frame(height: 10)
+                
+                
+                Button("Fetch Data") {
+                    // Perform data fetching with the selected date
+                    fetchData(with: selectedDate)
+                    isDatePickerVisible.toggle()
+                }
+                //.padding()
+                .background(Color.blue)
+                .foregroundColor(.white)
+                .cornerRadius(8)
+                .padding(.horizontal, 20)
+                .frame(height: 10)
+            }
+            if isDatePickerVisible {
+                DatePicker("", selection: $selectedDate, in: ...Date(), displayedComponents: .date)
+                    .datePickerStyle(GraphicalDatePickerStyle())
+                    .labelsHidden()
+                    //.padding()
             }
             Spacer()
 
@@ -747,6 +799,13 @@ struct CommentDetailView: View {
                             .foregroundStyle(.white)
                             .background(.green)
                     }
+                    // set up for the region to set focus when refresh map
+                    let latitude = firstLocation.latitude
+                    let longitude = firstLocation.longitude
+                    let focuscoordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+                    let region = MKCoordinateRegion(center: focuscoordinate, latitudinalMeters: 1000, longitudinalMeters: 1000) // Adjust the values for the desired zoom level
+
+                    //Mapview.setRegion(region, animated: true)
                     Annotation("📍\(firstLocation.address) : \(getSubString(firstLocation.Sample_Date_Time, start: 0, length: 16))",
                                coordinate: CLLocationCoordinate2D(latitude: firstLocation.latitude, longitude: firstLocation.longitude),
                                anchor: .topLeading) {
@@ -766,9 +825,18 @@ struct CommentDetailView: View {
                 }
             }
             .onAppear(perform: {
-                fetchData()
+                fetchDataForToday()
             })
+
         }
+    }
+    private var formattedSelectedDate: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter.string(from: selectedDate)
+    }
+    private func fetchDataForToday() {
+        fetchData(with: Date())
     }
     func getSubString(_ input: String, start: Int, length: Int) -> String {
         guard start >= 0, start < input.count, length > 0 else {
@@ -793,8 +861,11 @@ struct CommentDetailView: View {
     //
     // fetch map data
     //
-    private func fetchData() {
-        guard let url = URL(string: "https://\(server)/theme/show_map_api?ser=\(comment.serialNumber)&username=\(username)") else {
+    private func fetchData(with date: Date) {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyyMMdd"
+        let formattedDate = formatter.string(from: date)
+        guard let url = URL(string: "https://\(server)/theme/show_map_api?ser=\(comment.serialNumber)&username=\(username)&date=\(formattedDate)") else {
             return
         }
         var request = URLRequest(url: url)
