@@ -1,6 +1,6 @@
 //
 //  ContentView.swift
-//  MR Tracker - IOS front end
+//  MR Tracker - IOS front end version 1.1
 //
 //  Created by Rob Wilkinson on 2024-01-19.
 //
@@ -23,66 +23,133 @@ struct ContentView: View {
 
         NavigationView {
             ZStack {
+                //if authenticated == true {
+                //    Map(coordinateRegion: .constant(MKCoordinateRegion(
+                //        center: CLLocationCoordinate2D(latitude: 43.70, longitude: -79.42),
+                //        span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
+                //    )))
+                //    .ignoresSafeArea()
+                //}
+                
                 VStack {
-                    Form {
-                        if authenticated == false {
-                            Section(header: Text("🗝 Enter Credentials")) {
-                                TextField("Username", text: $username)
+                        Form {
+                            if authenticated == false {
+                                Section(header: Text("🗝 Enter Credentials")) {
+                                    TextField("Username", text: $username)
+                                        .disabled(authenticated)
+                                        .autocapitalization(.none)
+                                        .frame(height: 40)
+                                    
+                                    SecureField("Password", text: $password)
+                                        .disabled(authenticated)
+                                        .frame(height: 40)
+                                    
+                                    TextField("Server", text: $server)
+                                        .disabled(authenticated)
+                                        .autocapitalization(.none)
+                                        .frame(height: 40)
+                                    
+                                    Button("Login") {
+                                        authenticate()
+                                    }
                                     .disabled(authenticated)
-                                    .autocapitalization(.none)
-                                    .frame(height: 40)
-                                
-                                SecureField("Password", text: $password)
-                                    .disabled(authenticated)
-                                    .frame(height: 40)
-                                
-                                TextField("Server", text: $server)
-                                    .disabled(authenticated)
-                                    .autocapitalization(.none)
-                                    .frame(height: 40)
-                                
-                                Button("Login") {
-                                    authenticate()
-                                }
-                                .disabled(authenticated)
-                                .padding()
-                                .background(
-                                    LinearGradient(
-                                        gradient: Gradient(colors: [Color(.systemBlue), Color(.systemTeal)]),
-                                        startPoint: .leading,
-                                        endPoint: .trailing
+                                    .padding()
+                                    .background(
+                                        LinearGradient(
+                                            gradient: Gradient(colors: [Color(.systemBlue), Color(.systemTeal)]),
+                                            startPoint: .leading,
+                                            endPoint: .trailing
+                                        )
                                     )
-                                )
-                                .frame(minWidth: 0, maxWidth: .infinity)
-                                .foregroundColor(.white)
-                                .clipShape(RoundedRectangle(cornerRadius: 6))
-                                .shadow(color: Color.gray.opacity(0.5), radius: 3, x: 0, y: 1)
-                                .font(.headline)
-                                
+                                    .frame(minWidth: 0, maxWidth: .infinity)
+                                    .foregroundColor(.white)
+                                    .clipShape(RoundedRectangle(cornerRadius: 6))
+                                    .shadow(color: Color.gray.opacity(0.5), radius: 3, x: 0, y: 1)
+                                    .font(.headline)
+                                    
+                                }
+                            } else {
+                                //VStack(spacing: 10) {
+                                    Spacer()
+                                    NavigationLink(destination: TagListView(username: username, server: server, token: token ?? "")) {
+                                        Text("👩🏻‍💻 Tag Central")
+                                            .foregroundColor(.white)
+                                            .padding()
+                                            .background(
+                                                RoundedRectangle(cornerRadius: 10)
+                                                    .fill(Color.teal)
+                                            )
+                                            .padding(EdgeInsets(top: 5, leading: 20, bottom: 5, trailing: 20))
+                                            .frame(maxWidth: .infinity)
+                                    }
+                                    //NavigationLink("👩🏻‍💻 Tag Central", destination: TagListView(username: username,server: server, token: token ?? ""))
+                                    //    .foregroundColor(.blue)
+                                    
+                                    NavigationLink(destination: TagDetailView(username: username,server: server, token: token ?? "", option: "ALL")) {
+                                        Text("Tag Inventory")
+                                            .foregroundColor(.white)
+                                            .padding()
+                                            .background(
+                                                RoundedRectangle(cornerRadius: 10)
+                                                    .fill(Color.green)
+                                            )
+                                            .padding(EdgeInsets(top: 5, leading: 20, bottom: 5, trailing: 20))
+                                            .frame(maxWidth: .infinity)
+                                    }
+                                    // NavigationLink("⚠️ Tag Alerts", destination: TagDetailView(username: username,server: server, token: token ?? "", option: "ALL"))
+                                    //     .foregroundColor(.blue)
+                                    NavigationLink(destination: TagDetailView(username: username,server: server, token: token ?? "", option: "LOST")) {
+                                        Text("Tags Offline")
+                                            .foregroundColor(.white)
+                                            .padding()
+                                            .background(
+                                                RoundedRectangle(cornerRadius: 10)
+                                                    .fill(Color.red)
+                                            )
+                                            .padding(EdgeInsets(top: 5, leading: 20, bottom: 5, trailing: 20))
+                                            .frame(maxWidth: .infinity)
+                                    }
+                                    //NavigationLink("⚠️ Tag Alerts", destination: TagDetailView(username: username,server: server, token: token ?? "", option: "LOST"))
+                                    //    .foregroundColor(.blue)
+                                    
+                                    Divider()
+                                    Spacer()
+                                    NavigationLink(destination: InfoView()) {
+                                        Text("Product Information")
+                                            .foregroundColor(.white)
+                                            .padding()
+                                            .background(
+                                                RoundedRectangle(cornerRadius: 10)
+                                                    .fill(Color.orange)
+                                            )
+                                            .padding(EdgeInsets(top: 5, leading: 20, bottom: 5, trailing: 20))
+                                            .frame(maxWidth: .infinity)
+                                    }
+                                    //NavigationLink("Product Information", destination: InfoView())
+                                    //    .foregroundColor(.blue)
+                                    NavigationLink(destination: TermsView()) {
+                                        Text("Terms & Conditions")
+                                            .foregroundColor(.white)
+                                            .padding()
+                                            .background(
+                                                RoundedRectangle(cornerRadius: 10)
+                                                    .fill(Color.indigo)
+                                            )
+                                            .padding(EdgeInsets(top: 5, leading: 20, bottom: 5, trailing: 20))
+                                            .frame(maxWidth: .infinity)
+                                    }
+                                    //NavigationLink("Terms & Conditions", destination: TermsView())
+                                    //    .foregroundColor(.red)
+                                    
+                                    Spacer()
+                                //}
                             }
-                        } else {
-
-                            Text("Login Successful, welcome \(username)!")
-                                .foregroundColor(.green)
-                            
-                            NavigationLink("👩🏻‍💻 Tag Central", destination: TagListView(username: username,server: server, token: token ?? ""))
-                                .foregroundColor(.blue)
-                            
-                            NavigationLink("🏷️ Tag Inventory", destination: TagDetailView(username: username,server: server, token: token ?? "", option: "ALL"))
-                                .foregroundColor(.blue)
-                            
-                            NavigationLink("⚠️ Tag Alerts", destination: TagDetailView(username: username,server: server, token: token ?? "", option: "LOST"))
-                                .foregroundColor(.blue)
-                            
-                            NavigationLink("Product Information", destination: InfoView())
-                                .foregroundColor(.blue)
-                            
-                            NavigationLink("Terms & Conditions", destination: TermsView())
-                                .foregroundColor(.red)
                         }
-                    }
-                    .padding()
-                    .navigationTitle("👨🏻‍💼 MR🌐Tracker")
+                        .padding()
+
+                        .navigationTitle("👨🏻‍💼 MR🌐Tracker")
+                        .navigationBarBackButtonHidden(false)
+
                 }
             }
             .alert(isPresented: $showAlert) {
@@ -147,6 +214,8 @@ struct ContentView: View {
                         DispatchQueue.main.async {
                             self.token = token
                             self.authenticated = true
+                            errorMessage = "Login Successful, welcome \(username)!"
+                            showAlert = true
                         }
                     } else {
                         errorMessage = "Login Failed"
@@ -165,12 +234,7 @@ struct ContentView: View {
 }
 
 
-extension ContentView {
-    func hideKeyboard() {
-        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-    }
-    
-}
+
 
 struct TermsView: View {
     let termsAndConditionsText = """
@@ -230,13 +294,11 @@ struct InfoView: View {
 
     MR🌐Tracker is a cutting-edge tracking solution, meticulously engineered to monitor the location of a diverse range of assets. From vacation cruises, letters and packages to luggage, vehicles, keys, backpacks, bicycles, and construction equipment – we've got you covered. Whether you're a traveler, a professional, or simply looking to safeguard your belongings, our advanced technology offers comprehensive oversight, providing the peace of mind you deserve.
     
-    Simply decide what you want to track, attach a tag, and you're good to go – it's that simple.
+    Simply decide what you want to track, attach a tag, and you're good to go – it's that simple. The tags record locations worldwide with no data charges.
 
     Your typical setup includes a MacBook computer, iPhone, and tracking tags. Run as a franchise at your site. We handle all the necessary software installation, network setup, and offer remote support for a nominal charge. Rest assured about data privacy – all data uses SSL encryption, ensuring your information remains secure. Reports are accessible only to you as an admin, and you can grant access to additional users with user IDs chosen by you as the admin.
-
-    The tags record locations worldwide with no data charges.
-
-    If that's not enough MR🌐Tracker also does full inventory management, auction tracking and package tracking of your inventory, a fully integrated system, ideal for your Facebook coin, notes or precious metals side-hustle sales.
+    
+    To get started send an email to MrTracker.416@gmail.com and we will walk you throigh teh set up required.
 
     If you have any questions or concerns regarding Mr Tracker functionality please contact us by using email address MrTracker.416@gmail.com, we would love to hear from you!
     """
@@ -390,7 +452,7 @@ struct TagListView: View {
                     .shadow(color: Color.gray.opacity(0.5), radius: 3, x: 0, y: 1)
                     .font(.largeTitle)
                 }
-                .navigationBarBackButtonHidden(true)
+                .navigationBarBackButtonHidden(false)
 
             } else {
                 if isLoading {
@@ -783,4 +845,5 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
+
 
