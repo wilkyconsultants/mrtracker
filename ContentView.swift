@@ -1,8 +1,9 @@
 //
 //  ContentView.swift
-//  MR Tracker - IOS front end version 1.1
+//  MR Tracker - IOS front end 
+//  2024-01-20 - Version 1.2 - with toolbar implemented
 //
-//  Created by Rob Wilkinson on 2024-01-19.
+//  Created by Rob Wilkinson on 2024-01-20.
 //
 
 import SwiftUI
@@ -17,12 +18,169 @@ struct ContentView: View {
     @State private var authenticated = false
     @State private var isLoading = false
     @State private var navigateToTagList = false
+    
 
     var body: some View {
 
 
         NavigationView {
+
             ZStack {
+                if authenticated == false {
+                    Text("👨🏻‍💼 MR🌐Tracker")
+                        .font(.title)
+                        .toolbar {
+                            ToolbarItem(placement: .bottomBar) {
+                                HStack {
+                                    NavigationLink(destination: InfoView()) {
+                                        VStack(alignment: .center) {
+                                            Image(systemName: "info.square")
+                                                .resizable()
+                                                .frame(width: 20, height: 20)
+                                                .aspectRatio(contentMode: .fit)
+                                            Text("Information")
+                                                .font(.body)
+                                                .foregroundColor(.black)
+                                        }
+                                    }
+                                    NavigationLink(destination: TermsView()) {
+                                        VStack(alignment: .center) {
+                                            Image(systemName: "person.crop.circle.badge.questionmark")
+                                                .resizable()
+                                                .frame(width: 20, height: 20)
+                                                .aspectRatio(contentMode: .fit)
+                                            Text("Terms & Conditions")
+                                                .font(.body)
+                                                .foregroundColor(.black)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                }
+                if authenticated {
+                    VStack(alignment: .center) {
+                        Text("👨🏻‍💼 MR🌐Tracker")
+                            .font(.title)
+                            .toolbar {
+                                ToolbarItemGroup(placement: .primaryAction) {
+                                    HStack {
+                                        Button(action: {
+                                            UIApplication.shared.perform(NSSelectorFromString("suspend"))
+                                        }) {
+                                            VStack(alignment: .center) {
+                                                Image(systemName: "power.circle")
+                                                    .resizable()
+                                                    .frame(width: 20, height: 20)
+                                                    .aspectRatio(contentMode: .fit)
+                                                Text("Minimize")
+                                                    .font(.body)
+                                                    .foregroundColor(.black)
+                                            }
+                                        }
+                                        NavigationLink(destination: InfoView()) {
+                                            VStack(alignment: .center) {
+                                                Image(systemName: "info.square")
+                                                    .resizable()
+                                                    .frame(width: 20, height: 20)
+                                                    .aspectRatio(contentMode: .fit)
+                                                Text("Information")
+                                                    .font(.body)
+                                                    .foregroundColor(.black)
+                                            }
+                                        }
+                                        NavigationLink(destination: TermsView()) {
+                                            VStack(alignment: .center) {
+                                                Image(systemName: "person.crop.circle.badge.questionmark")
+                                                    .resizable()
+                                                    .frame(width: 20, height: 20)
+                                                    .aspectRatio(contentMode: .fit)
+                                                Text("Terms & Conditions")
+                                                    .font(.body)
+                                                    .foregroundColor(.black)
+                                            }
+                                    }
+                                  }
+                                }
+                            }
+                    }
+                    
+                    Text("👨🏻‍💼 MR🌐Tracker")
+                        .font(.title)
+                    .toolbar {
+                    ToolbarItem(placement: .bottomBar) {
+                        HStack {
+                            NavigationLink(destination: TagListView(username: username, server: server, token: token ?? "")) {
+                                VStack(alignment: .center) {
+                                    Image(systemName: "house")
+                                        .resizable()
+                                        .frame(width: 20, height: 20)
+                                        .aspectRatio(contentMode: .fit)
+                                            Text("Main")
+                                                .font(.body)
+                                                .foregroundColor(.black)
+                                }
+                            }
+                            NavigationLink(destination: TagDetailView(username: username,server: server, token: token ?? "", option: "ALL")) {
+                                VStack(alignment: .center) {
+                                    Image(systemName: "tag.fill")
+                                        .resizable()
+                                        .frame(width: 20, height: 20)
+                                        .aspectRatio(contentMode: .fit)
+                                            Text("All")
+                                                .font(.body)
+                                                .foregroundColor(.black)
+                                }
+                            }
+                            NavigationLink(destination: TagDetailView(username: username,server: server, token: token ?? "", option: "ACTIVE")) {
+                                VStack(alignment: .center) {
+                                    Image(systemName: "car")
+                                        .resizable()
+                                        .frame(width: 20, height: 20)
+                                        .aspectRatio(contentMode: .fit)
+                                            Text("Active")
+                                                .font(.body)
+                                                .foregroundColor(.black)
+                                }
+                            }
+                            NavigationLink(destination: TagDetailView(username: username,server: server, token: token ?? "", option: "AWAY")) {
+                                VStack(alignment: .center) {
+                                    Image(systemName: "mappin.and.ellipse")
+                                        .resizable()
+                                        .frame(width: 20, height: 20)
+                                        .aspectRatio(contentMode: .fit)
+                                            Text("Away")
+                                                .font(.body)
+                                                .foregroundColor(.black)
+                                }
+                            }
+                            NavigationLink(destination: TagDetailView(username: username,server: server, token: token ?? "", option: "LOST")) {
+                                VStack(alignment: .center) {
+                                    Image(systemName: "exclamationmark.triangle")
+                                        .resizable()
+                                        .frame(width: 20, height: 20)
+                                        .aspectRatio(contentMode: .fit)
+                                            Text("Lost")
+                                                .font(.body)
+                                                .foregroundColor(.black)
+                                }
+                            }
+                            NavigationLink(destination: TagDetailView(username: username,server: server, token: token ?? "", option: "BATTERY_WEAK")) {
+                                VStack(alignment: .center) {
+                                    Image(systemName: "minus.plus.batteryblock.exclamationmark.fill")
+                                        .resizable()
+                                        .frame(width: 20, height: 20)
+                                        .aspectRatio(contentMode: .fit)
+                                            Text("Battery")
+                                                .font(.body)
+                                                .foregroundColor(.black)
+                                }
+                            }
+                            
+                        }
+                    }
+                }
+            }
                 //if authenticated == true {
                 //    Map(coordinateRegion: .constant(MKCoordinateRegion(
                 //        center: CLLocationCoordinate2D(latitude: 43.70, longitude: -79.42),
@@ -34,6 +192,8 @@ struct ContentView: View {
                 VStack {
                         Form {
                             if authenticated == false {
+                                Text("👨🏻‍💼 MR🌐Tracker")
+                                    .font(.title)
                                 Section(header: Text("🗝 Enter Credentials")) {
                                     TextField("Username", text: $username)
                                         .disabled(authenticated)
@@ -69,87 +229,12 @@ struct ContentView: View {
                                     
                                 }
                             } else {
-                                //VStack(spacing: 10) {
-                                    Spacer()
-                                    NavigationLink(destination: TagListView(username: username, server: server, token: token ?? "")) {
-                                        Text("👩🏻‍💻 Tag Central")
-                                            .foregroundColor(.white)
-                                            .padding()
-                                            .background(
-                                                RoundedRectangle(cornerRadius: 10)
-                                                    .fill(Color.teal)
-                                            )
-                                            .padding(EdgeInsets(top: 5, leading: 20, bottom: 5, trailing: 20))
-                                            .frame(maxWidth: .infinity)
-                                    }
-                                    //NavigationLink("👩🏻‍💻 Tag Central", destination: TagListView(username: username,server: server, token: token ?? ""))
-                                    //    .foregroundColor(.blue)
-                                    
-                                    NavigationLink(destination: TagDetailView(username: username,server: server, token: token ?? "", option: "ALL")) {
-                                        Text("Tag Inventory")
-                                            .foregroundColor(.white)
-                                            .padding()
-                                            .background(
-                                                RoundedRectangle(cornerRadius: 10)
-                                                    .fill(Color.green)
-                                            )
-                                            .padding(EdgeInsets(top: 5, leading: 20, bottom: 5, trailing: 20))
-                                            .frame(maxWidth: .infinity)
-                                    }
-                                    // NavigationLink("⚠️ Tag Alerts", destination: TagDetailView(username: username,server: server, token: token ?? "", option: "ALL"))
-                                    //     .foregroundColor(.blue)
-                                    NavigationLink(destination: TagDetailView(username: username,server: server, token: token ?? "", option: "LOST")) {
-                                        Text("Tags Offline")
-                                            .foregroundColor(.white)
-                                            .padding()
-                                            .background(
-                                                RoundedRectangle(cornerRadius: 10)
-                                                    .fill(Color.red)
-                                            )
-                                            .padding(EdgeInsets(top: 5, leading: 20, bottom: 5, trailing: 20))
-                                            .frame(maxWidth: .infinity)
-                                    }
-                                    //NavigationLink("⚠️ Tag Alerts", destination: TagDetailView(username: username,server: server, token: token ?? "", option: "LOST"))
-                                    //    .foregroundColor(.blue)
-                                    
-                                    Divider()
-                                    Spacer()
-                                    NavigationLink(destination: InfoView()) {
-                                        Text("Product Information")
-                                            .foregroundColor(.white)
-                                            .padding()
-                                            .background(
-                                                RoundedRectangle(cornerRadius: 10)
-                                                    .fill(Color.orange)
-                                            )
-                                            .padding(EdgeInsets(top: 5, leading: 20, bottom: 5, trailing: 20))
-                                            .frame(maxWidth: .infinity)
-                                    }
-                                    //NavigationLink("Product Information", destination: InfoView())
-                                    //    .foregroundColor(.blue)
-                                    NavigationLink(destination: TermsView()) {
-                                        Text("Terms & Conditions")
-                                            .foregroundColor(.white)
-                                            .padding()
-                                            .background(
-                                                RoundedRectangle(cornerRadius: 10)
-                                                    .fill(Color.indigo)
-                                            )
-                                            .padding(EdgeInsets(top: 5, leading: 20, bottom: 5, trailing: 20))
-                                            .frame(maxWidth: .infinity)
-                                    }
-                                    //NavigationLink("Terms & Conditions", destination: TermsView())
-                                    //    .foregroundColor(.red)
-                                    
-                                    Spacer()
-                                //}
+
                             }
                         }
                         .padding()
-
-                        .navigationTitle("👨🏻‍💼 MR🌐Tracker")
+                        //.navigationTitle("👨🏻‍💼 MR🌐Tracker")
                         .navigationBarBackButtonHidden(false)
-
                 }
             }
             .alert(isPresented: $showAlert) {
@@ -214,8 +299,8 @@ struct ContentView: View {
                         DispatchQueue.main.async {
                             self.token = token
                             self.authenticated = true
-                            errorMessage = "Login Successful, welcome \(username)!"
-                            showAlert = true
+                            //errorMessage = "Login Successful, welcome \(username)!"
+                            //showAlert = true
                         }
                     } else {
                         errorMessage = "Login Failed"
@@ -355,6 +440,7 @@ struct TagListView: View {
     @State private var datadate = Date()
 
     var body: some View {
+        
         VStack {
             Text("Refreshed: \(formattedCurrentDateTime())")
                 .foregroundColor(.blue)
@@ -603,6 +689,7 @@ struct CommentDetailView: View {
     let marker: String
     let ago: String
     let token: String
+    
 
     @State private var route: MKRoute?
     @State private var travelTime: String?
