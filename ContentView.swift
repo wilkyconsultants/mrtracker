@@ -2,9 +2,10 @@
 //  ContentView.swift
 //  MR Tracker - IOS front end
 //
-//  Created by Rob Wilkinson on 2024-01-20.
-//  2024-01-20 - Version 1.2 - with toolbar 
+//  Created by Rob Wilkinson on 2024-01-18.
+//  2024-01-19 - Version 1.2 - with toolbar
 //  2024-01-20 - Version 1.3 - with date selection
+//  2024-01-21 - Version 1.4 - with coloured routes
 //
 //
 
@@ -702,6 +703,8 @@ struct CommentDetailView: View {
     @State private var selectedDate: Date = Date()
     @State private var isDatePickerVisible = false
     
+    @State private var fetchDataIsComplete = true
+    
     @State private var selectedDay = 1
     @State private var isDropdownVisible = false
     private let days = Array(1...14)
@@ -724,15 +727,14 @@ struct CommentDetailView: View {
             HStack {
                 //Text("As of: \(formattedCurrentDate)")
                 Button("Go") {
-                    // Perform data fetching with the selected date
                     fetchData(with: selectedDate, days: selectedDay)
                     if isDatePickerVisible {
                         isDatePickerVisible.toggle()
                     }
                 }
                 //.padding()
-                .background(Color.blue)
-                .foregroundColor(.white)
+                .background(fetchDataIsComplete ? .green : .yellow)
+                .foregroundColor(.black)
                 .cornerRadius(8)
                 .padding(.horizontal, 20)
                 .frame(height: 20)
@@ -795,20 +797,20 @@ struct CommentDetailView: View {
                 .foregroundColor(.white)
                 .cornerRadius(8)
                 .padding(.horizontal, 20)
-                .frame(height: 10)
-                
-                
-                Button("Fetch Data") {
-                    // Perform data fetching with the selected date
-                    fetchData(with: selectedDate, days: selectedDay)
-                    isDatePickerVisible.toggle()
-                }
+                .frame(height: 18)
+
+                //Button("Fetch Data") {
+                //    fetchData(with: selectedDate, days: selectedDay)
+                //    if isDatePickerVisible {
+                //        isDatePickerVisible.toggle()
+                //    }
+               // }
                 //.padding()
-                .background(Color.blue)
-                .foregroundColor(.white)
-                .cornerRadius(8)
-                .padding(.horizontal, 20)
-                .frame(height: 10)
+                //.background(Color.blue)
+                //.foregroundColor(.white)
+                //.cornerRadius(8)
+                //.padding(.horizontal, 20)
+                //.frame(height: 10)
             }
             if isDatePickerVisible {
                 DatePicker("", selection: $selectedDate, in: ...Date(), displayedComponents: .date)
@@ -817,21 +819,74 @@ struct CommentDetailView: View {
                     //.padding()
             }
             Spacer()
+            // Define a table of colors for the 31 days
+            let colors: [Color] = [
+                Color(red: 0.0, green: 0.0, blue: 1.0),
+                Color(red: 0.0, green: 1.0, blue: 0.0),
+                Color(red: 1.0, green: 0.0, blue: 0.0),
+                Color(red: 0.0, green: 1.0, blue: 1.0),
+                Color(red: 1.0, green: 0.0, blue: 1.0),
+                Color(red: 1.0, green: 1.0, blue: 0.0),
+                Color(red: 0.5, green: 0.0, blue: 0.5),
+                Color(red: 0.5, green: 0.5, blue: 0.0),
+                Color(red: 0.0, green: 0.5, blue: 0.5),
+                Color(red: 0.7, green: 0.3, blue: 0.0),
+                Color(red: 0.0, green: 0.7, blue: 0.3),
+                Color(red: 0.3, green: 0.0, blue: 0.7),
+                Color(red: 0.7, green: 0.7, blue: 0.0),
+                Color(red: 0.0, green: 0.7, blue: 0.7),
+                Color(red: 0.7, green: 0.0, blue: 0.7),
+                Color(red: 0.2, green: 0.5, blue: 0.8),
+                Color(red: 0.8, green: 0.2, blue: 0.5),
+                Color(red: 0.5, green: 0.8, blue: 0.2),
+                Color(red: 0.9, green: 0.6, blue: 0.2),
+                Color(red: 0.2, green: 0.9, blue: 0.6),
+                Color(red: 0.6, green: 0.2, blue: 0.9),
+                Color(red: 0.8, green: 0.8, blue: 0.5),
+                Color(red: 0.5, green: 0.8, blue: 0.8),
+                Color(red: 0.8, green: 0.5, blue: 0.8),
+                Color(red: 0.3, green: 0.7, blue: 0.5),
+                Color(red: 0.5, green: 0.3, blue: 0.7),
+                Color(red: 0.7, green: 0.5, blue: 0.3),
+                Color(red: 0.6, green: 0.4, blue: 0.8),
+                Color(red: 0.8, green: 0.6, blue: 0.4),
+                Color(red: 0.4, green: 0.8, blue: 0.6),
+                Color(red: 0.2, green: 0.2, blue: 0.2)
+            ]
 
             Map() {
                 // Add the polyline to connect points with lines
-                if locations.count > 1 {
-                    MapPolyline(coordinates: locations.map { CLLocationCoordinate2D(latitude: $0.latitude, longitude: $0.longitude) })
-                        .stroke(Color.red, style: StrokeStyle(lineWidth: 2, dash: [5]))
+                //if locations.count > 1 {
+                //    MapPolyline(coordinates: locations.map { CLLocationCoordinate2D(latitude: $0.latitude, longitude: $0.longitude) })
+                 //       .stroke(Color.red, style: StrokeStyle(lineWidth: 1, dash: [3]))
+                //}
 
-                    
+
+                // Use the table of colors to set the color for each day
+
+                
+                if locations.count > 1 {
+                    ForEach(Array(locations.indices.dropLast()), id: \.self) { index in
+                        let day = getSubString(locations[index].Sample_Date_Time, start: 8, length: 2)
+                        let dayNumber = Int(day) ?? 1
+                        let color = dayNumber >= 1 && dayNumber <= 31 ? colors[dayNumber - 1] : .black
+
+                        MapPolyline(coordinates: [
+                            CLLocationCoordinate2D(latitude: locations[index].latitude, longitude: locations[index].longitude),
+                            CLLocationCoordinate2D(latitude: locations[index + 1].latitude, longitude: locations[index + 1].longitude)
+                        ])
+                        .stroke(color, style: StrokeStyle(lineWidth: 2, dash: [3]))
+                    }
                 }
                 ForEach(locations) { location in
+                    // name the Image based on the first Day (offfset 8-9) in the Sample_Date_Time 2024-01-21_00:00:04
+                    // use Image ##.circle - getSubString(location.Sample_Date_Time, start: 8, length: 2))
+                    let Image_Name = "\(getSubString(location.Sample_Date_Time, start: 8, length: 2)).square"
                     Annotation("\(location.address) : \(getSubString(location.Sample_Date_Time, start: 0, length: 16))",
                                coordinate: CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude),
                                anchor: .topLeading) {
-                        Image(systemName: "car")
-                            .padding(3)
+                        Image(systemName: Image_Name)
+                            .padding(2)
                             .foregroundStyle(.white)
                             .background(.black)
                             .navigationTitle("\(location.description)")
@@ -925,6 +980,7 @@ struct CommentDetailView: View {
     // fetch map data
     //
     private func fetchData(with date: Date, days: Int) {
+        fetchDataIsComplete = false
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyyMMdd"
         let formattedDate = formatter.string(from: date)
@@ -949,6 +1005,7 @@ struct CommentDetailView: View {
                     self.locations = decodedData
                     connectLocationsOnMap()
                 }
+                fetchDataIsComplete = true
             } catch {
                 print("Error decoding data: \(error.localizedDescription)")
             }
@@ -1066,6 +1123,7 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
+
 
 
 
