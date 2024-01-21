@@ -3,8 +3,8 @@
 //  MR Tracker - IOS front end
 //
 //  Created by Rob Wilkinson on 2024-01-20.
-//  2024-01-20 - Version 1.2 - with toolbar implemented
-//  2024-01-20 - Version 1.3 - with date selection implemented
+//  2024-01-20 - Version 1.2 - with toolbar 
+//  2024-01-20 - Version 1.3 - with date selection
 //
 //
 
@@ -716,18 +716,45 @@ struct CommentDetailView: View {
             return dateFormatter.string(from: Date())
         }
         VStack {
-            //Text("As of: \(formattedCurrentDate)")
-            Text("Data for: \(formattedSelectedDate)")
-                .bold()
-                .foregroundColor(Color.blue)
-            if let firstLocation = locations.first {
-                Text("📍\(firstLocation.address)")
-            }
-            // the marker is only value for current data ie. todays date
-            if currentDate == formattedSelectedDate {
-                if let firstLocation = locations.first {
-                    Text("\(marker)\(ago): Travelled \(distance)km to home")
+            HStack {
+                //Text("As of: \(formattedCurrentDate)")
+
+                Button("◀") {
+                    selectedDate = Calendar.current.date(byAdding: .day, value: -1, to: selectedDate) ?? selectedDate
+                    fetchData(with: selectedDate)
                 }
+                .padding(8)
+                .background(Color.teal
+                )
+                .foregroundColor(.white)
+                .cornerRadius(8)
+                .font(.system(size: 18))
+                
+                Text("🗓️\(formattedSelectedDate)")
+                    .bold()
+                    .foregroundColor(Color.blue)
+                if !isSelectedDateToday {
+                    Button("▶") {
+                        selectedDate = Calendar.current.date(byAdding: .day, value: 1, to: selectedDate) ?? selectedDate
+                        fetchData(with: selectedDate)
+                    }
+                    .padding(8)
+                    .background(Color.teal)
+                    .foregroundColor(.white)
+                    .cornerRadius(8)
+                    .font(.system(size: 18))
+                    //.disabled(isSelectedDateToday)
+                }
+            }
+                if let firstLocation = locations.first {
+                    Text("📍\(firstLocation.address)")
+                }
+                // the marker is only value for current data ie. todays date
+                if currentDate == formattedSelectedDate {
+                    if let firstLocation = locations.first {
+                        Text("\(marker)\(ago): Travelled \(distance)km to home")
+                    }
+                //}
             }
             //Text("\(currentDate) vs \(formattedSelectedDate)")
             HStack {
@@ -829,6 +856,13 @@ struct CommentDetailView: View {
             })
 
         }
+    }
+    private var isSelectedDateToday: Bool {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        let selectedDateString = formatter.string(from: selectedDate)
+        let currentDateString = formatter.string(from: Date())
+        return selectedDateString == currentDateString
     }
     private var formattedSelectedDate: String {
         let formatter = DateFormatter()
