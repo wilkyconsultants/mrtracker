@@ -2,7 +2,7 @@
 //  ContentView.swift
 //  MR Tracker - IOS front end
 //
-//  Created by Rob Wilkinson on 2024-01-17
+//  Created by Rob Wilkinson on 2024-01-17 - see Issues for scfreen shots
 //
 // MR🌐Tracker Change History:
 // 2024-01-17 -Version 1.0 - Initial
