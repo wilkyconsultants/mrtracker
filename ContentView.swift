@@ -2,10 +2,14 @@
 //  ContentView.swift
 //  MR Tracker - IOS front end
 //
-//  Created by Rob Wilkinson on 2024-01-18.
-//  2024-01-19 - Version 1.2 - with toolbar
-//  2024-01-20 - Version 1.3 - with date selection
-//  2024-01-21 - Version 1.4 - with coloured routes
+//  Created by Rob Wilkinson on 2024-01-17
+//
+// MR🌐Tracker Change History:
+// 2024-01-17 -Version 1.0 - Initial
+// 2024-01-18 -Version 1.1 - lines on routes
+// 2024-01-19 -Version 1.2 - toolbar
+// 2024-01-20 -Version 1.3 - date selection
+// 2024-01-21 -Version 1.4 - coloured routes
 //
 //
 
@@ -376,7 +380,12 @@ struct TermsView: View {
 
 struct InfoView: View {
     let InfoText = """
-    MR🌐Tracker Version 1.1
+    MR🌐Tracker Change History:
+    2024-01-17 -Version 1.0 - Initial
+    2024-01-18 -Version 1.1 - lines on routes
+    2024-01-19 -Version 1.2 - toolbar
+    2024-01-20 -Version 1.3 - date selection
+    2024-01-21 -Version 1.4 - coloured routes
     
     The Ultimate Solution for Tracking Anything, Anywhere in the World.
 
@@ -1123,7 +1132,6 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
-
 
 
 
