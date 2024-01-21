@@ -701,6 +701,11 @@ struct CommentDetailView: View {
     //@State private var selectedDate = Date()
     @State private var selectedDate: Date = Date()
     @State private var isDatePickerVisible = false
+    
+    @State private var selectedDay = 1
+    @State private var isDropdownVisible = false
+    private let days = Array(1...14)
+
 
     private let gradient = LinearGradient(colors: [.red, .orange], startPoint: .leading, endPoint: .trailing)
     private let stroke = StrokeStyle(lineWidth: 5, lineCap: .round, lineJoin: .round, dash: [8, 8])
@@ -718,10 +723,33 @@ struct CommentDetailView: View {
         VStack {
             HStack {
                 //Text("As of: \(formattedCurrentDate)")
+                Button("Go") {
+                    // Perform data fetching with the selected date
+                    fetchData(with: selectedDate, days: selectedDay)
+                    if isDatePickerVisible {
+                        isDatePickerVisible.toggle()
+                    }
+                }
+                //.padding()
+                .background(Color.blue)
+                .foregroundColor(.white)
+                .cornerRadius(8)
+                .padding(.horizontal, 20)
+                .frame(height: 20)
+                .font(.system(size: 28))
+
+            //}
+                Picker("", selection: $selectedDay) {
+                    ForEach(days, id: \.self) { day in
+                        Text("\(day) days")
+                    }
+                }
+                .pickerStyle(MenuPickerStyle())
+                //.padding()
 
                 Button("◀") {
                     selectedDate = Calendar.current.date(byAdding: .day, value: -1, to: selectedDate) ?? selectedDate
-                    fetchData(with: selectedDate)
+                    fetchData(with: selectedDate, days: selectedDay)
                 }
                 .padding(8)
                 .background(Color.teal
@@ -730,13 +758,14 @@ struct CommentDetailView: View {
                 .cornerRadius(8)
                 .font(.system(size: 18))
                 
-                Text("🗓️\(formattedSelectedDate)")
+                //Text("🗓️\(formattedSelectedDate)")
+                Text("\(formattedSelectedDate)")
                     .bold()
                     .foregroundColor(Color.blue)
                 if !isSelectedDateToday {
                     Button("▶") {
                         selectedDate = Calendar.current.date(byAdding: .day, value: 1, to: selectedDate) ?? selectedDate
-                        fetchData(with: selectedDate)
+                        fetchData(with: selectedDate,days: selectedDay)
                     }
                     .padding(8)
                     .background(Color.teal)
@@ -751,9 +780,9 @@ struct CommentDetailView: View {
                 }
                 // the marker is only value for current data ie. todays date
                 if currentDate == formattedSelectedDate {
-                    if let firstLocation = locations.first {
+                    
                         Text("\(marker)\(ago): Travelled \(distance)km to home")
-                    }
+                    
                 //}
             }
             //Text("\(currentDate) vs \(formattedSelectedDate)")
@@ -771,7 +800,7 @@ struct CommentDetailView: View {
                 
                 Button("Fetch Data") {
                     // Perform data fetching with the selected date
-                    fetchData(with: selectedDate)
+                    fetchData(with: selectedDate, days: selectedDay)
                     isDatePickerVisible.toggle()
                 }
                 //.padding()
@@ -870,7 +899,7 @@ struct CommentDetailView: View {
         return formatter.string(from: selectedDate)
     }
     private func fetchDataForToday() {
-        fetchData(with: Date())
+        fetchData(with: Date(), days: selectedDay)
     }
     func getSubString(_ input: String, start: Int, length: Int) -> String {
         guard start >= 0, start < input.count, length > 0 else {
@@ -895,11 +924,11 @@ struct CommentDetailView: View {
     //
     // fetch map data
     //
-    private func fetchData(with date: Date) {
+    private func fetchData(with date: Date, days: Int) {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyyMMdd"
         let formattedDate = formatter.string(from: date)
-        guard let url = URL(string: "https://\(server)/theme/show_map_api?ser=\(comment.serialNumber)&username=\(username)&date=\(formattedDate)") else {
+        guard let url = URL(string: "https://\(server)/theme/show_map_api?ser=\(comment.serialNumber)&username=\(username)&date=\(formattedDate)&days=\(days)") else {
             return
         }
         var request = URLRequest(url: url)
@@ -1037,5 +1066,6 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
+
 
 
