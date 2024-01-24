@@ -11,6 +11,7 @@
 // 2024-01-20 -Version 1.3 - date selection
 // 2024-01-21 -Version 1.4 - coloured routes
 // 2024-01-23 -Version 1.5 - add distance chart
+// 2024-01-24 -Version 1.6 - add search bar
 //
 //
 
