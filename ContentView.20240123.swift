@@ -1257,18 +1257,51 @@ struct ChartView: View {
     let username: String
     let serialNumber: String
     let description: String
-
+    
+    private let pdays = Array(1...365)
+    @State private var days = 30  // default is 30 days of distance data
+    
+    
+    //@State private var firstElementName: String
+    //@State private var lastElementName: String
+    
     @StateObject var viewModel = ChartsViewModel()
-
     @State private var chartData: [ChartData] = []
 
+    var firstElementName: String? {
+        chartData.first?.name
+    }
+
+    var lastElementName: String? {
+        chartData.last?.name
+    }
+    
     var body: some View {
         VStack {
+            // can't use firstElement or lastElement here, get error??
             //Text("Daily Distance(km) : \(serialNumber):\(description)")
-            Text("\(description) -km/day")
-                .font(.title3)
+            Text("\(description)")
+                //.font(.title3)
                 .bold()
- 
+                .foregroundColor(Color.black)
+                .font(.custom("Arial", size: 22))
+            Text(" Date Range: \(firstElementName ?? "") -  \(lastElementName ?? "")")
+                //.font(.title3)
+                .bold()
+                .foregroundColor(Color.blue)
+                .font(.custom("Arial", size: 16))
+
+                            Picker("", selection: $days) {
+                                ForEach(pdays, id: \.self) { pday in
+                                    Text("\(pday) days")
+                                }
+                            }
+                            .pickerStyle(MenuPickerStyle())
+                            .font(.custom("Arial", size: 22))
+                            .onChange(of: days, initial: true) { oldCount, newCount in
+                                fetchData()
+                            }
+
             HStack {
                 VStack {
                    // Toggle(isOn: $viewModel.graphType.isBarChart) {
@@ -1325,6 +1358,8 @@ struct ChartView: View {
             // Use a ScrollView to allow scrolling if there are many data points
             ScrollView {
                 Chart(chartData, id: \.name) { element in
+
+
                     if viewModel.graphType.isPieChart {
                         SectorMark(
                             angle: .value("Distance", element.sales),
@@ -1333,12 +1368,15 @@ struct ChartView: View {
                         .cornerRadius (5)
                         .foregroundStyle(by: .value ("Date", element.name))
                     }
-
+                    // we use this one only
                     if viewModel.graphType.isBarChart {
                         BarMark(
                             x: .value("Date", element.name),
                             y: .value("Distance", element.sales)
+                            //x: .value("Distance", element.sales),
+                            //y: .value("Date", element.name)
                         )
+                        // this sets color in each bar
                         .foregroundStyle(by: .value("Type", element.name))
                         
                     }
@@ -1354,8 +1392,11 @@ struct ChartView: View {
                     if viewModel.graphType.isLineChart {
 
                         LineMark(
-                            x: .value("Date", element.name),
-                            y: .value("Distance", element.sales)
+                        //    x: .value("Date", element.name),
+                        //    y: .value("Distance", element.sales)
+
+                            x: .value("Distance", element.sales),
+                            y: .value("Date", element.name)
                         )
                         
                         PointMark(
@@ -1365,11 +1406,21 @@ struct ChartView: View {
                     }
                     
                 }
-                .chartXAxisLabel(position: .bottom, alignment: .center, spacing: 6) {
-                    Text("by day - last 45 days")
-                        .font(.custom("Arial", size: 13))
+                // this is the chart title
+                .chartXAxisLabel(position: .bottom, alignment: .center, spacing: 26) {
+                    Text("km / day - last \(days) days")
+                        .font(.custom("Arial", size: 24))
+                        .foregroundColor(Color.black)
                 }
-                .frame(height: viewModel.graphType.isProgressChart ? 200 : 380)
+                .frame(height: viewModel.graphType.isProgressChart ? 500 : 380)
+                .padding()
+                .chartLegend(.hidden)
+                .chartYAxis {
+                    AxisMarks(position: .leading)
+                }
+
+                .chartXAxis(.hidden)
+                //.AxisValueLabel(
                 .chartBackground { chartProxy in
                     GeometryReader { geometry in
                         let frame = geometry[chartProxy.plotAreaFrame]
@@ -1383,7 +1434,6 @@ struct ChartView: View {
                                 .foregroundColor (.primary)
                         }
                         .position(x: frame.midX, y: frame.midY)
-                        //.modifier(RotatedXAxisLabels())
                     }
                 }
                 .padding()
@@ -1396,7 +1446,7 @@ struct ChartView: View {
     }
 
     func fetchData() {
-        guard let url = URL(string: "https://\(server)/theme/chart_api?serialNumber=\(serialNumber)&username=\(username)") else {
+        guard let url = URL(string: "https://\(server)/theme/chart_api?serialNumber=\(serialNumber)&username=\(username)&days=\(days)") else {
             return
         }
 
