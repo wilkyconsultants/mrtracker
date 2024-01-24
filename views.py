@@ -1421,7 +1421,7 @@ def get_disk_space(request):
     # Make the API request
     #headers = {
     #    "Content-Type": "application/json",
-    #    "Authorization": f"Bearer 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"
+    #    "Authorization": f"Bearer"
     #}
 
     #response = requests.post(
@@ -1464,7 +1464,7 @@ def message_view(request):
         # Make the API request
         headers = {
             "Content-Type": "application/json",
-            "Authorization": f"Bearer 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"
+            "Authorization": f"Bearer"
         }
 
         data = requests.post(
