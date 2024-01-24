@@ -1290,17 +1290,19 @@ struct ChartView: View {
                 .bold()
                 .foregroundColor(Color.blue)
                 .font(.custom("Arial", size: 16))
-
-                            Picker("", selection: $days) {
-                                ForEach(pdays, id: \.self) { pday in
-                                    Text("\(pday) days")
-                                }
-                            }
-                            .pickerStyle(MenuPickerStyle())
-                            .font(.custom("Arial", size: 22))
-                            .onChange(of: days, initial: true) { oldCount, newCount in
-                                fetchData()
-                            }
+            HStack {
+                Picker("", selection: $days) {
+                    ForEach(pdays, id: \.self) { pday in
+                        Text("\(pday) days")
+                    }
+                }
+                .pickerStyle(MenuPickerStyle())
+                .font(.custom("Arial", size: 22))
+                .onChange(of: days, initial: true) { oldCount, newCount in
+                    fetchData()
+                }
+                Text("Selected")
+            }
 
             HStack {
                 VStack {
@@ -1420,23 +1422,27 @@ struct ChartView: View {
                 }
 
                 .chartXAxis(.hidden)
+                //
+                // this is deprecated in ios 17 but when I comment it out it doesn't seem to make any difference
+                // so I will just remove it
+                //
                 //.AxisValueLabel(
-                .chartBackground { chartProxy in
-                    GeometryReader { geometry in
-                        let frame = geometry[chartProxy.plotAreaFrame]
-                        VStack {
-                            //Text("Distance by Day")
-                            Text("")
-                                .font (.callout)
-                                .foregroundStyle(.secondary)
-                            Text("")
-                                .font(.title2.bold ())
-                                .foregroundColor (.primary)
-                        }
-                        .position(x: frame.midX, y: frame.midY)
-                    }
-                }
-                .padding()
+                //.chartBackground { chartProxy in
+                //    GeometryReader { geometry in
+                //        let frame = geometry[chartProxy.plotAreaFrame]
+                //        VStack {
+                //            //Text("Distance by Day")
+                //            Text("")
+                //                .font (.callout)
+                //                .foregroundStyle(.secondary)
+                //            Text("")
+                //                .font(.title2.bold ())
+                //                .foregroundColor (.primary)
+                //        }
+                 //       .position(x: frame.midX, y: frame.midY)
+                  //  }
+                //}
+                //.padding()
             }
         }
         .padding()
@@ -1550,6 +1556,12 @@ struct Locations: Codable, Identifiable {
         case home_longitude
         case latitude
         case longitude
+    }
+}
+
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
     }
 }
 
