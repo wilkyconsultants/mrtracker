@@ -22,6 +22,8 @@ struct ChartData3: Codable, Identifiable {
     }
     let name: String
     let sales: Double
+    let UpdateCount: Double
+    let ping_count: Double
 }
 
 struct GraphType3: Equatable {
@@ -38,7 +40,7 @@ struct ChartTagPerfView: View {
     let description: String
     
     private let pdays = Array(1...365)
-    @State private var days = 365  // default is 365 days of battery % data
+    @State private var days = 7  // default is 7 days of battery % data
     
     @StateObject var viewModel = ChartsViewModel3()
     @State private var chartData3: [ChartData3] = []
@@ -46,9 +48,20 @@ struct ChartTagPerfView: View {
     var averageSales: Double {
         guard !chartData3.isEmpty else { return 0 }
 
-        let totalSales = chartData3.reduce(0) { $0 + $1.sales }
-        return totalSales / Double(chartData3.count)
+        _ = chartData3.reduce(0) { $0 + $1.sales }
+        let totalCounts = chartData3.reduce(0) { $0 + $1.UpdateCount }
+        let pingCounts = chartData3.reduce(0) { $0 + $1.ping_count }
+        
+        //print("Double(100 / ping_counts \(pingCounts) / totalCounts \(totalCounts)*100) * 5)")
+        return Double(100 / ((Double(pingCounts) / Double(totalCounts)*100)))*5
+        
+        //return totalSales / Double(chartData3.count)
     }
+    
+    var minutesPerICloudUpdate: Double {
+            let minutesPerICloudUpdate = (100 / averageSales) * 5
+            return minutesPerICloudUpdate.isNaN ? 0 : minutesPerICloudUpdate
+        }
     
     var dateDifference: Int? {
         guard let firstDate = firstElementName, let lastDate = lastElementName else {
@@ -118,7 +131,6 @@ struct ChartTagPerfView: View {
                     if viewModel.graphType.isBarChart {
                         BarMark(
                             x: .value("Date", element.name),
-                            //y: .value("Tag Perf %", element.sales)
                             y: .value("Tag Perf %", element.sales)
                         )
                     }
@@ -152,7 +164,7 @@ struct ChartTagPerfView: View {
                 // this is the chart title
                 .chartXAxisLabel(position: .bottom, alignment: .center, spacing: 26) {
                     //Text("Tag Perf% - last \(days) days (\(dateDifference ?? 0)")
-                    Text("Tag Perf% - last \(dateDifference ?? 0) days")
+                    Text("Minutes/update - over \(dateDifference ?? 0) days")
                         .font(.custom("Arial", size: 16))
                         .foregroundColor(Color.brown)
                 }
@@ -166,11 +178,23 @@ struct ChartTagPerfView: View {
                 .chartYAxis {
                     AxisMarks(position: .leading)
                 }
-                .chartYScale(domain: 0...100)
+                //.chartYScale(domain: 0...100)
             }
-            Text("Average Tag Perf %: \(String(format: "%.0f", averageSales))")
-                .font(.custom("Arial", size: 16))
-                .foregroundColor(Color.red) // You can customize the color
+            //Text("Average Tag Perf %: \(String(format: "%.0f", averageSales))")
+            //    .font(.custom("Arial", size: 16))
+            //    .foregroundColor(Color.red) // You can customize the color
+            Text("\(String(format: "%.1f", averageSales)) Minutes/update")
+                .font(.custom("Arial", size: 18))
+                .foregroundColor(Color.green) // You can customize the color
+            Text("Guidelines: 5 min/update is perfect")
+                .font(.custom("Arial", size: 14))
+            Text("< 20 min/update is ideal")
+                .font(.custom("Arial", size: 14))
+                .foregroundColor(Color.brown) // You can customize the color
+            //Text("Avg Minutes per iCloud Update: \(String(format: "%.0f", minutesPerICloudUpdate))")
+            //    .font(.custom("Arial", size: 16))
+            //    .foregroundColor(Color.blue) // You can customize the color
+
         }
         .padding()
         .onAppear {
