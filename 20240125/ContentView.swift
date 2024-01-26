@@ -250,9 +250,11 @@ struct ContentView: View {
                                             
                                         }
                                         Text("For Demo:")
-                                            .foregroundColor(.blue)
-                                        Text("use demo as username, any password")
-                                            .foregroundColor(.blue)
+                                            .foregroundColor(.brown)
+                                        Text("username: demo")
+                                            .foregroundColor(.green)
+                                        Text("password: ")
+                                            .foregroundColor(.green)
                                         
                                     }
                                 } else {
@@ -355,3 +357,4 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
+
