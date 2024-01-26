@@ -1,6 +1,5 @@
-MR🌐Tracker - track anything, anytime
 
-The Ultimate Solution for Tracking Anything, Anywhere in the World.
+MR🌐Tracker, The Ultimate Solution for Tracking Anything, Anywhere in the World.
 
 MR🌐Tracker is a cutting-edge tracking solution, meticulously engineered to monitor the location of a diverse range of assets. From cruises, letters and packages to luggage, vehicles, keys, backpacks, bicycles, and construction equipment – we've got you covered. 
 
