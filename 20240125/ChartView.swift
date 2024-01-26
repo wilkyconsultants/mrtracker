@@ -37,11 +37,19 @@ struct ChartView: View {
     let description: String
     
     private let pdays = Array(1...365)
-    @State private var days = 365  // default is 30 days of distance data
+    @State private var days = 30  // default is 30 days of distance data
     
     @StateObject var viewModel = ChartsViewModel()
     @State private var chartData: [ChartData] = []
 
+    var totalSalesPerDay: Double {
+        guard let dateDifference = dateDifference, dateDifference > 0 else {
+            return 0
+        }
+
+        return totalSales / Double(dateDifference)
+    }
+    
     var totalSales: Double {
         chartData.reduce(0) { $0 + $1.sales }
     }
@@ -123,6 +131,9 @@ struct ChartView: View {
             Text("Total Distance: \(String(format: "%.0f", totalSales)) km")
                 .font(.custom("Arial", size: 16))
                 .foregroundColor(Color.red)
+            Text("Average Distance per Day: \(String(format: "%.1f", totalSalesPerDay)) km")
+                .font(.custom("Arial", size: 16))
+                .foregroundColor(Color.brown)
         }
         .padding()
         .onAppear {
@@ -153,4 +164,5 @@ struct ChartView: View {
         }.resume()
     }
 }
+
 
