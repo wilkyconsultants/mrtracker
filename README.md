@@ -1,7 +1,7 @@
 
 MR🌐Tracker, Is the Ultimate Solution for Tracking almost Anything, Anywhere in the World.
 
-This is a cutting-edge tracking solution, meticulously engineered to monitor the location of a diverse range of assets. From cruises, letters and packages to luggage, vehicles, keys, backpacks, bicycles, and construction equipment – we've got you covered. 
+This is a cutting-edge tracking solution, meticulously engineered to monitor the location of a diverse range of assets. From cruises, letters and packages to luggage, vehicles, keys, backpacks, bicycles, and construction equipment – we've got you covered. This solution is not intended to be used to pin point assets, rather track the general location data on an ongoing basis for that asset. There are better solutions for tracking the exact location of items but these can work handin hand with this solution if desired.
 
 Whether you're a traveler, a professional, or simply looking to safeguard your belongings, our advanced technology offers comprehensive oversight, providing the peace of mind you deserve. Simply decide what you want to track, attach a tag, and you're good to go – it's that simple.
 
