@@ -37,7 +37,7 @@ struct ChartBatteryView: View {
     let description: String
     
     private let pdays = Array(1...365)
-    @State private var days = 365  // default is 365 days of battery % data
+    @State private var days = 7  // default is 7 days of battery % data
     
     @StateObject var viewModel = ChartsViewModel2()
     @State private var chartData2: [ChartData2] = []
