@@ -1,4 +1,3 @@
-
 //
 //  ContentView.swift
 //  MR Tracker - IOS front end
