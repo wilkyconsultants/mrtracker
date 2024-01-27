@@ -29,11 +29,12 @@ struct TagListView: View {
             if let reports = reports {
                 ForEach(reports) { report in
                     VStack {
+                        Text("Tag Categories")
+                            .fontWeight(.bold)
+                            .foregroundColor(.brown)
+                            .font(.system(size: 18))
                         HStack(alignment: .center) {
-                            Text("Tag Categories")
-                                .fontWeight(.bold)
-                                .foregroundColor(.brown)
-                                .font(.system(size: 18))
+
                             NavigationLink(destination: TagDetailView(username: username,server: server, token: token, option: "ALL", chartList: "")) {
                                 CircleLink(text: "All", count: report.all_ctr, fillColor: Color.teal, fontSize: 18)
                             }
