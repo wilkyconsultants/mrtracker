@@ -59,14 +59,22 @@ struct TagListView: View {
                             NavigationLink(destination: TagDetailView(username: username,server: server, token: token, option: "ALL", chartList: "CHART")) {
                                 CircleLink(text: "Distance ", count: "Chart", fillColor: Color.orange, fontSize: 18)
                             }
-                        //}
-                        NavigationLink(destination: TagDetailView(username: username,server: server, token: token, option: "ALL", chartList: "CHART_BATTERY")) {
-                            CircleLink(text: "Battery🪫 ", count: "Chart", fillColor: Color.brown, fontSize: 18)
-                        }
-                            NavigationLink(destination: TagDetailView(username: username,server: server, token: token, option: "ALL", chartList: "CHART_TAGPERF")) {
-                                CircleLink(text: "Tag Perf ", count: "Chart", fillColor: Color.purple, fontSize: 18)
+                            //}
+                           // NavigationLink(destination: TagDetailView(username: username,server: server, token: token, option: "ALL", chartList: "CHART_BATTERY")) {
+                           //     CircleLink(text: "Battery🪫 ", count: "Chart", fillColor: Color.brown, fontSize: 18)
+                           // }
+                            NavigationLink(destination: ChartALLBatteryView(server: server,username: username,serialNumber: "", description: "")) {
+                                CircleLink(text: "Battery🪫All", count: "Chart", fillColor: Color.brown, fontSize: 18)
                             }
+                        //}
+                        NavigationLink(destination: ChartALLTagPerfView(server: server,username: username,serialNumber: "", description: "")) {
+                            CircleLink(text: "Performance ", count: "Chart", fillColor: Color.gray, fontSize: 18)
+                        }
                     }
+                           // NavigationLink(destination: ChartALLTagPerfView()) {
+                           //     CircleLink(text: "ALL Perf ", count: "Chart", fillColor: Color.purple, fontSize: 18)
+                           // }
+                        //}
                         
                         //Spacer(minLength: 30)
                         HStack(spacing: 5) {
@@ -199,4 +207,5 @@ struct TagListView: View {
         return dateFormatter.string(from: Date())
     }
 }
+
 
