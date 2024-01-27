@@ -34,7 +34,7 @@ struct TagDetailView: View {
 
                     // Your existing code for displaying comments
                         if chartList == "CHART" {
-                            NavigationLink(destination: ChartView(server: server,username: username,serialNumber: comment.serialNumber, description: comment.description)) {
+                            NavigationLink(destination: ChartDistanceView(server: server,username: username,serialNumber: comment.serialNumber, description: comment.description)) {
                                 VStack(alignment: .leading) {
                                     Text("\(comment.description)")
                                     //.padding()
