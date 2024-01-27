@@ -112,10 +112,9 @@ struct ChartALLBatteryView: View {
                 }
                 // this is the chart title
                 .chartXAxisLabel(position: .bottom, alignment: .center, spacing: 4) {
-                    //Text("Tag Perf% - last \(days) days (\(dateDifference ?? 0)")
-               //     Text("")
-               //         .font(.custom("Arial", size: 16))
-               //         .foregroundColor(Color.brown)
+                    Text("Battery% by Tag for today")
+                        .font(.custom("Arial", size: 16))
+                        .foregroundColor(Color.brown)
                 }
                 .frame(height: viewModel.graphType.isProgressChart ? 200 : 200)
                 //.padding()
@@ -192,4 +191,6 @@ struct ChartALLBatteryView: View {
         }.resume()
     }
 }
+
+
 
