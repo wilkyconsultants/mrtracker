@@ -30,6 +30,10 @@ struct TagListView: View {
                 ForEach(reports) { report in
                     VStack {
                         HStack(alignment: .center) {
+                            Text("Tag Categories")
+                                .fontWeight(.bold)
+                                .foregroundColor(.brown)
+                                .font(.system(size: 18))
                             NavigationLink(destination: TagDetailView(username: username,server: server, token: token, option: "ALL", chartList: "")) {
                                 CircleLink(text: "All", count: report.all_ctr, fillColor: Color.teal, fontSize: 18)
                             }
@@ -54,11 +58,15 @@ struct TagListView: View {
                             }
                         }
                         Divider()
+                        Text("Charts")
+                            .fontWeight(.bold)
+                            .foregroundColor(.brown)
+                            .font(.system(size: 18))
                         HStack(alignment: .center) {
                             //Spacer()
-                            NavigationLink(destination: TagDetailView(username: username,server: server, token: token, option: "ALL", chartList: "CHART")) {
-                                CircleLink(text: "Distance ", count: "Chart", fillColor: Color.orange, fontSize: 18)
-                            }
+                           // NavigationLink(destination: TagDetailView(username: username,server: server, token: token, option: "ALL", chartList: "CHART")) {
+                            //    CircleLink(text: "Distance ", count: "Chart", fillColor: Color.orange, fontSize: 18)
+                            //}
                             //}
                            // NavigationLink(destination: TagDetailView(username: username,server: server, token: token, option: "ALL", chartList: "CHART_BATTERY")) {
                            //     CircleLink(text: "Battery🪫 ", count: "Chart", fillColor: Color.brown, fontSize: 18)
@@ -70,10 +78,13 @@ struct TagListView: View {
                         NavigationLink(destination: ChartALLTagPerfView(server: server,username: username,serialNumber: "", description: "")) {
                             CircleLink(text: "Performance ", count: "Chart", fillColor: Color.gray, fontSize: 18)
                         }
-                    }
+                    //}
+                        NavigationLink(destination: ChartALLDistanceView(server: server,username: username,serialNumber: "", description: "")){
+                            CircleLink(text: "All Distance ", count: "Chart", fillColor: Color.orange, fontSize: 18)
+                        }
                            // NavigationLink(destination: ChartALLTagPerfView()) {
                            //     CircleLink(text: "ALL Perf ", count: "Chart", fillColor: Color.purple, fontSize: 18)
-                           // }
+                            }
                         //}
                         
                         //Spacer(minLength: 30)
@@ -207,5 +218,4 @@ struct TagListView: View {
         return dateFormatter.string(from: Date())
     }
 }
-
 
