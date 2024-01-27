@@ -30,7 +30,7 @@ struct GraphType: Equatable {
     var isLineChart: Bool = false
 }
 
-struct ChartView: View {
+struct ChartDistanceView: View {
     let server: String
     let username: String
     let serialNumber: String
