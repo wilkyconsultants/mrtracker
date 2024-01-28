@@ -47,6 +47,12 @@ struct ChartDayTagPerfView: View {
     @StateObject var viewModel = ChartsViewModel7()
     @State private var chartData7: [ChartData7] = []
 
+    var averageResponseTime: Double {
+        guard !chartData7.isEmpty else { return 0 }
+        let totalResponseTime = chartData7.reduce(0) { $0 + $1.response }
+        return Double(totalResponseTime) / Double(chartData7.count)
+    }
+    
    // var averageSales: Double {
    //     guard !chartData7.isEmpty else { return 0 }
 
@@ -127,8 +133,6 @@ struct ChartDayTagPerfView: View {
             // Use a ScrollView to allow scrolling if there are many data points
             ScrollView {
                 Chart(chartData7, id: \.date) { element in
-
-
                     // we use this one only
                     if viewModel.graphType.isBarChart {
                         BarMark(
@@ -136,42 +140,23 @@ struct ChartDayTagPerfView: View {
                             y: .value("Tag Perf Minutes", element.response)
                         )
                     }
-
                 }
                 // this is the chart title
-                .chartXAxisLabel(position: .bottom, alignment: .center, spacing: 26) {
-                    //Text("Tag Perf% - last \(days) days (\(dateDifference ?? 0)")
-                    //Text("Minutes/update - over \(dateDifference ?? 0) days")
-                    //    .font(.custom("Arial", size: 16))
-                    //    .foregroundColor(Color.brown)
-                }
                 .frame(height: viewModel.graphType.isProgressChart ? 200 : 280)
                 .padding()
                 .chartLegend(.hidden)
                 .chartYAxis {
                     AxisMarks(position: .leading)
                 }
-                .chartXAxis(.hidden)
-                .chartYAxis {
-                    AxisMarks(position: .leading)
-                }
+                //.chartXAxis(.hidden)
+                //.chartYAxis {
+                //    AxisMarks(position: .leading)
+                //}
                 //.chartYScale(domain: 0...100)
             }
-            //Text("Average Tag Perf %: \(String(format: "%.0f", averageSales))")
-            //    .font(.custom("Arial", size: 16))
-            //    .foregroundColor(Color.red) // You can customize the color
-            //Text("\(String(format: "%.1f", averageSales)) Minutes/update")
-            //    .font(.custom("Arial", size: 18))
-            //    .foregroundColor(Color.green) // You can customize the color
-            //Text("Guidelines: 5 min/update is perfect")
-            //    .font(.custom("Arial", size: 14))
-            //Text("< 20 min/update is ideal")
-            //    .font(.custom("Arial", size: 14))
-            //    .foregroundColor(Color.brown) // You can customize the color
-
-            //Text("Avg Minutes per iCloud Update: \(String(format: "%.0f", minutesPerICloudUpdate))")
-            //    .font(.custom("Arial", size: 16))
-            //    .foregroundColor(Color.blue) // You can customize the color
+            Text("Average Response: \(String(format: "%.1f", averageResponseTime)) minutes")
+                .font(.custom("Arial", size: 16))
+                .foregroundColor(Color.red) // You can customize the color
             List {
                 ForEach(chartData7, id: \.date) { data in
 
@@ -181,8 +166,6 @@ struct ChartDayTagPerfView: View {
                         }
                     }
                 }
-        //}
-
         }
         .padding()
         .onAppear {
@@ -213,4 +196,3 @@ struct ChartDayTagPerfView: View {
         }.resume()
     }
 }
-
