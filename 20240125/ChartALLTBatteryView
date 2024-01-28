@@ -33,6 +33,32 @@ struct GraphType5: Equatable {
     var isLineChart: Bool = false
 }
 
+struct SearchBar5: View {
+    @Binding var text: String
+
+    var body: some View {
+        HStack {
+            TextField("Search", text: $text)
+                .padding(8)
+                .background(Color(.systemGray6))
+                .cornerRadius(8)
+                .padding(.horizontal, 10)
+
+            Button(action: {
+                withAnimation {
+                    text = ""
+                }
+            }) {
+                Image(systemName: "xmark.circle.fill")
+                    .foregroundColor(.gray)
+                    .opacity(text.isEmpty ? 0 : 1)
+            }
+            .padding(.trailing, 8)
+            .buttonStyle(PlainButtonStyle())
+        }
+    }
+}
+
 struct ChartALLBatteryView: View {
     let server: String
     let username: String
@@ -44,6 +70,17 @@ struct ChartALLBatteryView: View {
     
     @StateObject var viewModel = ChartsViewModel5()
     @State private var chartData5: [ChartData5] = []
+
+    @State private var searchText = ""
+    var filteredChartData: [ChartData5] {
+        if searchText.isEmpty {
+            return chartData5
+        } else {
+            return chartData5.filter { data in
+                return data.description.localizedCaseInsensitiveContains(searchText)
+            }
+        }
+    }
 
     
     var dateDifference: Int? {
@@ -116,7 +153,7 @@ struct ChartALLBatteryView: View {
                         .font(.custom("Arial", size: 16))
                         .foregroundColor(Color.brown)
                 }
-                .frame(height: viewModel.graphType.isProgressChart ? 200 : 200)
+                .frame(height: viewModel.graphType.isProgressChart ? 150 : 150)
                 //.padding()
                 //.chartLegend(.hidden)
 
@@ -143,8 +180,9 @@ struct ChartALLBatteryView: View {
             //    .foregroundColor(Color.brown) // You can customize the color
            // HStack {
             //if let chartData4.data = chartData5.data {
+            SearchBar5(text: $searchText)
             List {
-                ForEach(chartData5, id: \.serialNumber) { data in
+                ForEach(filteredChartData, id: \.serialNumber) { data in
                     NavigationLink(destination: ChartBatteryView(server: server,username: username,serialNumber: data.serialNumber, description: data.description)) {
                         VStack(alignment: .leading) {
                             Text("\(String(format: "%.0f", data.battery))% \(data.description)")
@@ -169,7 +207,7 @@ struct ChartALLBatteryView: View {
     }
 
     func fetchData() {
-        guard let url = URL(string: "https://\(server)/theme/chartALLBattery_api?username=\(username)") else {
+        guard let url = URL(string: "https://\(server)/theme/chartALLBattery_api?username=\(username)&filter=''") else {
             return
         }
 
