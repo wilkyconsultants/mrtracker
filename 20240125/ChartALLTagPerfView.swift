@@ -8,6 +8,7 @@
 
 import SwiftUI
 import Charts
+import Combine
 
 //
 // Chart example
@@ -22,9 +23,9 @@ struct ChartData4: Codable, Identifiable {
     }
     let date: String
     let description: String //name
-    let perfMin: Double  //sales
-    let UpdateCount: Double
-    let ping_count: Double
+    let Response_time: Double  //sales was perfMin
+    //let UpdateCount: Double
+    //let ping_count: Double
     let serialNumber: String
 }
 
@@ -46,24 +47,43 @@ struct ChartALLTagPerfView: View {
     
     @StateObject var viewModel = ChartsViewModel4()
     @State private var chartData4: [ChartData4] = []
+    
+    @State private var isFiltering: Bool = true
+    @State private var isRefresh: Bool = false
+    
+    @State private var searchText: String = ""
 
-    var averageSales: Double {
+    var filteredChartData: [ChartData4] {
+        if searchText.isEmpty {
+            return chartData4
+        } else {
+            return chartData4.filter { data in
+                data.description.localizedCaseInsensitiveContains(searchText)
+            }
+        }
+    }
+    var averageResponseTime: Double {
         guard !chartData4.isEmpty else { return 0 }
+        let totalResponseTime = chartData4.reduce(0) { $0 + $1.Response_time }
+        return totalResponseTime / Double(chartData4.count)
+    }
+    //var averageResponse: Double {
+    //   guard !chartData4.isEmpty else { return 0 }
 
-        _ = chartData4.reduce(0) { $0 + $1.perfMin }
-        let totalCounts = chartData4.reduce(0) { $0 + $1.UpdateCount }
-        let pingCounts = chartData4.reduce(0) { $0 + $1.ping_count }
+    //    _ = chartData4.reduce(0) { $0 + $1.Response_time }
+    //    let totalCounts = chartData4.reduce(0) { $0 + $1.UpdateCount }
+    //    let pingCounts = chartData4.reduce(0) { $0 + $1.ping_count }
         
         //print("Double(100 / ping_counts \(pingCounts) / totalCounts \(totalCounts)*100) * 5)")
-        return Double(100 / ((Double(pingCounts) / Double(totalCounts)*100)))*5
+    //    return Double(100 / ((Double(pingCounts) / Double(totalCounts)*100)))*5
         
         //return totalSales / Double(chartData3.count)
-    }
+   // }
     
-    var minutesPerICloudUpdate: Double {
-            let minutesPerICloudUpdate = (100 / averageSales) * 5
-            return minutesPerICloudUpdate.isNaN ? 0 : minutesPerICloudUpdate
-        }
+    //var minutesPerICloudUpdate: Double {
+    //        let minutesPerICloudUpdate = (100 / averageSales) * 5
+     //       return minutesPerICloudUpdate.isNaN ? 0 : minutesPerICloudUpdate
+     //   }
     
     var dateDifference: Int? {
         guard let firstDate = firstElementName, let lastDate = lastElementName else {
@@ -125,8 +145,9 @@ struct ChartALLTagPerfView: View {
                     if viewModel.graphType.isBarChart {
                         BarMark(
                             x: .value("Date", element.serialNumber),
-                            y: .value("Tag Perf %", element.perfMin)
+                            y: .value("Tag Perf In Minutes", element.Response_time)
                         )
+
                     }
                 }
                 // this is the chart title
@@ -136,7 +157,7 @@ struct ChartALLTagPerfView: View {
                //         .font(.custom("Arial", size: 16))
                //         .foregroundColor(Color.brown)
                 }
-                .frame(height: viewModel.graphType.isProgressChart ? 200 : 200)
+                .frame(height: viewModel.graphType.isProgressChart ? 150 : 150)
                 //.padding()
                 //.chartLegend(.hidden)
 
@@ -153,46 +174,63 @@ struct ChartALLTagPerfView: View {
             //Text("Average Tag Perf %: \(String(format: "%.0f", averageSales))")
             //    .font(.custom("Arial", size: 16))
             //    .foregroundColor(Color.red) // You can customize the color
-            Text("Tag Response: \(String(format: "%.1f", averageSales)) Min/update")
-                .font(.custom("Arial", size: 18))
-                .foregroundColor(Color.green) // You can customize the color
-            Text("Guidelines: 5 min/update is perfect")
-                .font(.custom("Arial", size: 14))
-            Text("< 20 min/update is ideal")
-                .font(.custom("Arial", size: 14))
-                .foregroundColor(Color.brown) // You can customize the color
-           // HStack {
-            //if let chartData4.data = chartData4.data {
+            //Text("Tag Response: \(String(format: "%.1f", Response_time)) Min/update")
+            //    .font(.custom("Arial", size: 18))
+            //    .foregroundColor(Color.green) // You can customize the color
+            //Text("Guidelines: 5 min/update is perfect")
+            //    .font(.custom("Arial", size: 14))
+            //Text("< 20 min/update is ideal")
+            //    .font(.custom("Arial", size: 14))
+             //   .foregroundColor(Color.brown) // You can customize the color
+            Text("Avg Response Time: \(String(format: "%.1f", averageResponseTime)) mins")
+                .font(.custom("Arial", size: 20))
+                .foregroundColor(Color.brown)
+        HStack {
+            Spacer()
+            Toggle("Filter on Valid Items Only", isOn: $isFiltering)
+        }
+            SearchBar(text: $searchText)
             List {
-                ForEach(chartData4, id: \.serialNumber) { data in
+                ForEach(filteredChartData, id: \.serialNumber) { data in
                     NavigationLink(destination: ChartTagPerfView(server: server,username: username,serialNumber: data.serialNumber, description: data.description)) {
                         VStack(alignment: .leading) {
-                            Text("\(String(format: "%.0f", data.perfMin)) min \(data.description)")
+                            Text("\(String(format: "%.1f", data.Response_time)) min \(data.description)")
                                 .foregroundColor(.blue)
                         }
                     }
                 }
-            //}
-            //}
-            //}
-            //.padding(.bottom, 10)
-            //Text("Avg Minutes per iCloud Update: \(String(format: "%.0f", minutesPerICloudUpdate))")
-            //    .font(.custom("Arial", size: 16))
-            //    .foregroundColor(Color.blue) // You can customize the color
-            
-
         }
         .padding()
         .onAppear {
             fetchData()
         }
+        .onReceive(Just(isFiltering)) { filtering in
+            if filtering {
+                if isRefresh {
+                    fetchData()
+                }
+            } else {
+                if !isRefresh {
+                    fetchData()
+                }
+            }
+        }
     }
 
     func fetchData() {
-        guard let url = URL(string: "https://\(server)/theme/chartALLTagPerf_api?username=\(username)") else {
+        
+       // if isFiltering {
+       //     let filter = "Items"
+       // } else {
+       //     let filter = "All"
+       // }
+        let filter = isFiltering ? "Items" : "All"
+        guard let url = URL(string: "https://\(server)/theme/chartALLTagPerf_api?username=\(username)&filter=\(filter)") else {
             return
         }
-
+        
+        isRefresh.toggle()
+        
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
 
