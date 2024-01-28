@@ -78,7 +78,7 @@ struct TagListView: View {
                         //}
                         NavigationLink(destination: ChartALLTagPerfView(server: server,username: username,serialNumber: "", description: "")) {
                             CircleLink(text: "Performance ", count: "Chart", fillColor: Color.gray, fontSize: 18)
-                        }
+                            }
                     //}
                         NavigationLink(destination: ChartALLDistanceView(server: server,username: username,serialNumber: "", description: "")){
                             CircleLink(text: "All Distance ", count: "Chart", fillColor: Color.orange, fontSize: 18)
@@ -86,7 +86,16 @@ struct TagListView: View {
                            // NavigationLink(destination: ChartALLTagPerfView()) {
                            //     CircleLink(text: "ALL Perf ", count: "Chart", fillColor: Color.purple, fontSize: 18)
                             }
-                        //}
+                        Text("Alerting")
+                        .fontWeight(.bold)
+                        .foregroundColor(.brown)
+                        .font(.system(size: 18))
+                        HStack(alignment: .center) {
+                            NavigationLink(destination: AllAlertView(server: server)) {
+                                CircleLink(text: "Alerts", count: "List", fillColor: Color.purple, fontSize: 18)
+                            }
+                        }
+                        //} AllAlertView
                         
                         //Spacer(minLength: 30)
                         HStack(spacing: 5) {
@@ -187,7 +196,7 @@ struct TagListView: View {
     }
 
     func fetchData() {
-        guard let url = URL(string: "https://\(server)/theme/tag_list_api?option=REPORT&user_id=\(username)") else {
+        guard let url = URL(string: "https://\(server)/theme/tag_list_api?option=REPORT&user_id=\(username)&filter=") else {
             return
         }
 
