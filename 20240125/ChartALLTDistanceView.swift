@@ -45,6 +45,17 @@ struct ChartALLDistanceView: View {
     @StateObject var viewModel = ChartsViewModel6()
     @State private var chartData6: [ChartData6] = []
 
+    @State private var searchText = ""
+
+    var filteredChartData: [ChartData6] {
+        if searchText.isEmpty {
+            return chartData6
+        } else {
+            return chartData6.filter { data in
+                return data.description.localizedCaseInsensitiveContains(searchText)
+            }
+        }
+    }
     
     var dateDifference: Int? {
         guard let firstDate = firstElementName, let lastDate = lastElementName else {
@@ -119,7 +130,7 @@ struct ChartALLDistanceView: View {
                //         .font(.custom("Arial", size: 16))
                //         .foregroundColor(Color.brown)
                 }
-                .frame(height: viewModel.graphType.isProgressChart ? 200 : 200)
+                .frame(height: viewModel.graphType.isProgressChart ? 150 : 150)
                 //.padding()
                 //.chartLegend(.hidden)
 
@@ -146,11 +157,12 @@ struct ChartALLDistanceView: View {
             //    .foregroundColor(Color.brown) // You can customize the color
            // HStack {
             //if let chartData4.data = chartData5.data {
+            SearchBar(text: $searchText)
             List {
-                ForEach(chartData6, id: \.serialNumber) { data in
+                ForEach(filteredChartData, id: \.serialNumber) { data in
                     NavigationLink(destination: ChartDistanceView(server: server,username: username,serialNumber: data.serialNumber, description: data.description)) {
                         VStack(alignment: .leading) {
-                            Text("\(String(format: "%.0f", data.distance))km \(data.description)")
+                            Text("\(String(format: "%.1f", data.distance))km \(data.description)")
                                 .foregroundColor(.blue)
                         }
                     }
@@ -172,7 +184,7 @@ struct ChartALLDistanceView: View {
     }
 
     func fetchData() {
-        guard let url = URL(string: "https://\(server)/theme/chartAllDistance_api?username=\(username)") else {
+        guard let url = URL(string: "https://\(server)/theme/chartAllDistance_api?username=\(username)&filter=''") else {
             return
         }
 
@@ -194,4 +206,5 @@ struct ChartALLDistanceView: View {
         }.resume()
     }
 }
+
 
