@@ -4,7 +4,10 @@
 //
 //  Created by Robert A Wilkinson on 2024-01-25.
 //
-
+//
+//
+//
+//
 
 import SwiftUI
 import Charts
@@ -22,8 +25,9 @@ struct ChartData3: Codable, Identifiable {
     }
     let name: String
     let sales: Double
-    let UpdateCount: Double
-    let ping_count: Double
+    //let UpdateCount: Double
+    //let ping_count: Double
+    let serialNumber: String
 }
 
 struct GraphType3: Equatable {
@@ -47,21 +51,27 @@ struct ChartTagPerfView: View {
 
     var averageSales: Double {
         guard !chartData3.isEmpty else { return 0 }
-
-        _ = chartData3.reduce(0) { $0 + $1.sales }
-        let totalCounts = chartData3.reduce(0) { $0 + $1.UpdateCount }
-        let pingCounts = chartData3.reduce(0) { $0 + $1.ping_count }
-        
-        //print("Double(100 / ping_counts \(pingCounts) / totalCounts \(totalCounts)*100) * 5)")
-        return Double(100 / ((Double(pingCounts) / Double(totalCounts)*100)))*5
-        
-        //return totalSales / Double(chartData3.count)
+        let totalSales = chartData3.reduce(0) { $0 + $1.sales }
+        return totalSales / Double(chartData3.count)
     }
     
-    var minutesPerICloudUpdate: Double {
-            let minutesPerICloudUpdate = (100 / averageSales) * 5
-            return minutesPerICloudUpdate.isNaN ? 0 : minutesPerICloudUpdate
-        }
+    //var averageSales: Double {
+    //    guard !chartData3.isEmpty else { return 0 }
+
+     //   _ = chartData3.reduce(0) { $0 + $1.sales }
+     //   let totalCounts = chartData3.reduce(0) { $0 + $1.UpdateCount }
+      //  let pingCounts = chartData3.reduce(0) { $0 + $1.ping_count }
+        
+        //print("Double(100 / ping_counts \(pingCounts) / totalCounts \(totalCounts)*100) * 5)")
+      //  return Double(100 / ((Double(pingCounts) / Double(totalCounts)*100)))*5
+        
+        //return totalSales / Double(chartData3.count)
+   // }
+    
+   // var minutesPerICloudUpdate: Double {
+   //         let minutesPerICloudUpdate = (100 / averageSales) * 5
+   //         return minutesPerICloudUpdate.isNaN ? 0 : minutesPerICloudUpdate
+    //    }
     
     var dateDifference: Int? {
         guard let firstDate = firstElementName, let lastDate = lastElementName else {
@@ -168,7 +178,7 @@ struct ChartTagPerfView: View {
                         .font(.custom("Arial", size: 16))
                         .foregroundColor(Color.brown)
                 }
-                .frame(height: viewModel.graphType.isProgressChart ? 500 : 380)
+                .frame(height: viewModel.graphType.isProgressChart ? 200 : 280)
                 .padding()
                 .chartLegend(.hidden)
                 .chartYAxis {
@@ -180,17 +190,27 @@ struct ChartTagPerfView: View {
                 }
                 //.chartYScale(domain: 0...100)
             }
-            //Text("Average Tag Perf %: \(String(format: "%.0f", averageSales))")
-            //    .font(.custom("Arial", size: 16))
-            //    .foregroundColor(Color.red) // You can customize the color
-            Text("\(String(format: "%.1f", averageSales)) Minutes/update")
-                .font(.custom("Arial", size: 18))
-                .foregroundColor(Color.green) // You can customize the color
+            Text("Average Response Time is: \(String(format: "%.1f", averageSales)) minutes")
+                .font(.custom("Arial", size: 16))
+                .foregroundColor(Color.brown) // You can customize the color
+           // Text("\(String(format: "%.1f", averageSales)) Minutes/update")
+           //     .font(.custom("Arial", size: 18))
+           //     .foregroundColor(Color.green) // You can customize the color
             Text("Guidelines: 5 min/update is perfect")
                 .font(.custom("Arial", size: 14))
             Text("< 20 min/update is ideal")
                 .font(.custom("Arial", size: 14))
                 .foregroundColor(Color.brown) // You can customize the color
+            List {
+                ForEach(chartData3, id: \.name) { data in
+                    NavigationLink(destination: ChartDayTagPerfView(server: server,username: username,serialNumber: data.serialNumber, description: description, date: data.name)) {
+                        VStack(alignment: .leading) {
+                            Text("\(data.name): \(String(format: "%.1f", data.sales)) Min Avg")
+                                .foregroundColor(.blue)
+                        }
+                    }
+                }
+        }
             //Text("Avg Minutes per iCloud Update: \(String(format: "%.0f", minutesPerICloudUpdate))")
             //    .font(.custom("Arial", size: 16))
             //    .foregroundColor(Color.blue) // You can customize the color
@@ -225,3 +245,4 @@ struct ChartTagPerfView: View {
         }.resume()
     }
 }
+
