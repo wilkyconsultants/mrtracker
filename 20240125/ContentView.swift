@@ -14,6 +14,7 @@
 // 2024-01-24 -Version 1.6 - search bar
 // 2024-01-25 -Version 1.7 - battery chart
 // 2024-01-25              - perf chart
+// 2024-01-27 -Version 1.8 - drill down
 //
 //
 
