@@ -8,29 +8,40 @@
 import SwiftUI
 
 struct InfoView: View {
+
+    
     let InfoText = """
-    MR🌐Tracker Change History:
-    2024-01-17 -Version 1.0 - Initial
-    2024-01-18 -Version 1.1 - lines on routes
-    2024-01-19 -Version 1.2 - toolbar
-    2024-01-20 -Version 1.3 - date selection
-    2024-01-21 -Version 1.4 - colour routes
-    2024-01-23 -Version 1.5 - distance chart
-    2024-01-24 -Version 1.6 - search bar
-    2024-01-25 -Version 1.7 - battery chart
-    2024-01-25              - perf chart
-    
-    The Ultimate Solution for Tracking Anything, Anywhere in the World.
+        MR🌐Tracker Change Highlights:
+        Version 1.0 (2024-01-17) - Initial Release
+        Version 1.1 (2024-01-18) - lines on routes
+        Version 1.2 (2024-01-19) - toolbar
+        Version 1.3 (2024-01-20) - date selection
+        Version 1.4 (2024-01-21) - coloured routes
+        Version 1.5 (2024-01-23) - distance chart
+        Version 1.6 (2024-01-24) - search bar
+        Version 1.7 (2024-01-25) - battery chart
+        Version 1.8 (2024-01-29) - perfo chart
 
-    MR🌐Tracker is a cutting-edge tracking solution, meticulously engineered to monitor the location of a diverse range of assets. From vacation cruises, letters and packages to luggage, vehicles, keys, backpacks, bicycles, and construction equipment – we've got you covered. Whether you're a traveler, a professional, or simply looking to safeguard your belongings, our advanced technology offers comprehensive oversight, providing the peace of mind you deserve.
-    
-    Simply decide what you want to track, attach a tag, and you're good to go – it's that simple. The tags record locations worldwide, usually with no data charges depending on your set up.
+        🌐 The Ultimate Solution for GPS Device Tracking Anywhere in the World!
 
-    Your typical setup includes a computer, to be used as a webserver, and tracking tags. You generally run the application as a franchise at your site. We handle all the necessary software installation, network setup, and offer remote support for a nominal charge. Rest assured about data privacy – all data uses SSL encryption, ensuring your information remains secure. Reports are accessible only to you as an admin, and you can grant access to additional users with user IDs chosen by you as the admin. There is no cost for the IOS iphone application as it is provided via App Store free of charge to make it easier to access your maps and reports.
-    
-    To get started send an email to MrTracker.416@gmail.com and we will walk you through the set up required.
+        MR🌐Tracker is a state-of-the-art GPS monitoring solution designed to keep track of the location of various assets. Whether it is tracking vacation cruises, packages, luggage, vehicles, backpacks, bicycles, or construction equipment, MR🌐Tracker provides comprehensive oversight to meet your needs.
 
-    If you have any questions or concerns regarding Mr Tracker functionality please contact us by using email address MrTracker.416@gmail.com, we would love to hear from you!
+        🚀 Key Features:
+        - Simple setup: Include a tracking tag with your asset and you are ready to go.
+        - Global tracking: Tags record locations worldwide, often with very low data charges, check with your carrier.
+        - Versatile use: Ideal for travelers, professionals, and over-all asset protection.
+
+        💻 Setup Process:
+        Setting up MR🌐Tracker is easy. You will need a computer as a web server and some kind of location tags. We handle software installation, network setup, and provide remote support for a nominal charge. Your own data can be secured with SSL encryption, ensuring privacy. Reports are accessible only to you as an admin, and you have control over user access. This is a free service that runs securely at your site with limited access to who you need to be able to see the items being monitored. You choose if this is intranet only or internet by firewall ports.
+
+        📲 iOS App:
+        The iOS app is free on the App Store, making it convenient to access maps and reports. The front end is able to interact with a set APIs from a back end rest framework. You can use any webserver to store the data as long as it supports rest APIs. We provide a demo set up for exploration only with test data. The idea is you have your own server and we can help you with the set up.
+
+        📧 Get Started:
+        To begin, send an email to MrTracker.416@gmail.com. We will guide you through the setup process.
+
+        ❓ Questions or Concerns:
+        If you have any questions or concerns about MR🌐Tracker, contact us at MrTracker.416@gmail.com. We value your feedback!
     
     """
 
@@ -42,3 +53,4 @@ struct InfoView: View {
         .navigationBarTitle("Product Information", displayMode: .inline)
     }
 }
+
