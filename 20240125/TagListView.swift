@@ -29,7 +29,7 @@ struct TagListView: View {
             if let reports = reports {
                 ForEach(reports) { report in
                     VStack {
-                        Text("Tag Categories")
+                        Text("Tracking Road Maps")
                             .fontWeight(.bold)
                             .foregroundColor(.brown)
                             .font(.system(size: 18))
