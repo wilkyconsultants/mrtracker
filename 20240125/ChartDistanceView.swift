@@ -1,5 +1,5 @@
 //
-//  ChartView.swift
+//  ChartDistanceView.swift
 //  20240111 Example login, switch to tag type list with counts
 //
 //  Created by Robert A Wilkinson on 2024-01-24.
@@ -35,9 +35,16 @@ struct ChartDistanceView: View {
     let username: String
     let serialNumber: String
     let description: String
+    //let newdays: Int
     
     private let pdays = Array(1...365)
-    @State private var days = 30  // default is 30 days of distance data
+   // @State private var days = 30  // default is 30 days of distance data
+    @State private var days = 60
+    
+    //init(newdays: Int) {
+    //    self._days = State(initialValue: newdays)
+    //}
+    
     
     @StateObject var viewModel = ChartsViewModel()
     @State private var chartData: [ChartData] = []
@@ -80,6 +87,7 @@ struct ChartDistanceView: View {
     
     var body: some View {
         VStack {
+            Spacer()
             Text("\(description)")
                 .bold()
                 .foregroundColor(Color.green)
@@ -104,38 +112,54 @@ struct ChartDistanceView: View {
             }
 
             // Use a ScrollView to allow scrolling if there are many data points
-            ScrollView {
-                Chart(chartData, id: \.name) { element in
-                    if viewModel.graphType.isBarChart {
-                        BarMark(
-                            x: .value("Date", element.name),
-                            y: .value("Distance", element.sales)
-                        )
+            Spacer()
+           // ScrollView {
+                VStack {
+                    Chart(chartData, id: \.name) { element in
+                        if viewModel.graphType.isBarChart {
+                            BarMark(
+                                x: .value("Date", element.name),
+                                y: .value("Distance", element.sales)
+                            )
+                        }
+                    }
+                    // this is the chart title
+                    .chartXAxisLabel(position: .bottom, alignment: .center, spacing: 26) {
+                        Text("km / day - last \(dateDifference ?? 0) days")
+                            .font(.custom("Arial", size: 16))
+                            .foregroundColor(Color.brown)
+                    }
+                    .frame(height: viewModel.graphType.isProgressChart ? 150 : 150)
+                    //.padding()
+                    .chartLegend(.hidden)
+                    .chartYAxis {
+                        AxisMarks(position: .leading)
+                    }
+                    
+                    .chartXAxis(.hidden)
+                }
+                Text("Total Distance: \(String(format: "%.0f", totalSales)) km")
+                    .font(.custom("Arial", size: 16))
+                    .foregroundColor(Color.red)
+                Text("Average Distance per Day: \(String(format: "%.1f", totalSalesPerDay)) km")
+                    .font(.custom("Arial", size: 16))
+                    .foregroundColor(Color.brown)
+          //  }
+
+                List {
+                    ForEach(chartData, id: \.name) { data in
+                        NavigationLink(destination: ChartDayDistanceView(server: server,username: username,serialNumber: serialNumber, description: description, date: data.name)) {
+                        VStack(alignment: .leading) {
+                            Text("\(data.name): \(String(format: "%.0f", data.sales)) km")
+                                .foregroundColor(.brown)
+                                .bold()
+                        }
+                        }
                     }
                 }
-                // this is the chart title
-                .chartXAxisLabel(position: .bottom, alignment: .center, spacing: 26) {
-                    Text("km / day - last \(dateDifference ?? 0) days")
-                        .font(.custom("Arial", size: 16))
-                        .foregroundColor(Color.brown)
-                }
-                .frame(height: viewModel.graphType.isProgressChart ? 500 : 380)
-                .padding()
-                .chartLegend(.hidden)
-                .chartYAxis {
-                    AxisMarks(position: .leading)
-                }
-
-                .chartXAxis(.hidden)
-            }
-            Text("Total Distance: \(String(format: "%.0f", totalSales)) km")
-                .font(.custom("Arial", size: 16))
-                .foregroundColor(Color.red)
-            Text("Average Distance per Day: \(String(format: "%.1f", totalSalesPerDay)) km")
-                .font(.custom("Arial", size: 16))
-                .foregroundColor(Color.brown)
+            //}
         }
-        .padding()
+        //.padding()
         .onAppear {
             fetchData()
         }
@@ -164,5 +188,7 @@ struct ChartDistanceView: View {
         }.resume()
     }
 }
+
+
 
 
