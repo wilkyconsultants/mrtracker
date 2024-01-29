@@ -1,5 +1,5 @@
 //
-//  ChartALLTDistanceView.swift
+//  ChartALLDistanceView.swift
 //  20240111 Example login, switch to tag type list with counts
 //
 //  Created by Robert A Wilkinson on 2024-01-26.
@@ -46,6 +46,9 @@ struct ChartALLDistanceView: View {
     @State private var chartData6: [ChartData6] = []
 
     @State private var searchText = ""
+    
+    //@State private var SelectedDate = "20240127"
+    @State private var selectedDate = Date()
 
     var filteredChartData: [ChartData6] {
         if searchText.isEmpty {
@@ -84,35 +87,26 @@ struct ChartALLDistanceView: View {
     }
     
     var body: some View {
+        
         VStack {
-            //Text("\(description)")
-            //    .bold()
-            //    .foregroundColor(Color.green)
-            //    .font(.custom("Arial", size: 22))
-            //Text(" Date Range: \(firstElementName ?? "") -  \(lastElementName ?? "")")
-            //Text(" Date Range: \(firstElementName ?? "") - \(lastElementName ?? "") (\(dateDifference ?? 0) days)")
-               // .bold()
-               // .foregroundColor(Color.blue)
-               // .font(.custom("Arial", size: 16))
-            //HStack {
-              //  Picker("", selection: $days) {
-              //      ForEach(pdays, id: \.self) { pday in
-               //         Text("\(pday) days")
-              //      }
-              //  }
-              //  .pickerStyle(MenuPickerStyle())
-              //  .font(.custom("Arial", size: 22))
-              //  .onChange(of: days, initial: true) { oldCount, newCount in
-              //      fetchData()
-              //  }
-              //  Text("Selected")
-            //}
 
-            // Use a ScrollView to allow scrolling if there are many data points
-           // ScrollView {
+        //}
+            
+            TextField("Selected Date", text: Binding(
+                get: { "Distance Chart for date: " + DateFormatter.yyyyMMdd.string(from: selectedDate) },
+                set: {
+                    if let date = DateFormatter.yyyyMMdd.date(from: $0) {
+                        selectedDate = date
+                        print("selectedDate=\(selectedDate)")
+                    }
+                }
+            ))
+            .multilineTextAlignment(.center)
+            .padding()
+            .textFieldStyle(RoundedBorderTextFieldStyle())
+            .disabled(true)
+            
                 Chart(chartData6, id: \.serialNumber) { element in
-
-
                     // we use this one only
                     if viewModel.graphType.isBarChart {
                         BarMark(
@@ -123,12 +117,11 @@ struct ChartALLDistanceView: View {
                 }
                 // this is the chart title
                 .chartXAxisLabel(position: .bottom, alignment: .center, spacing: 4) {
-                    Text("Distance by Tag for today")
+
+                   // Text("Distance by Tag for \(formattedDate)")
+                    Text("Distance by Tag")
                         .font(.custom("Arial", size: 16))
                         .foregroundColor(Color.brown)
-               //     Text("")
-               //         .font(.custom("Arial", size: 16))
-               //         .foregroundColor(Color.brown)
                 }
                 .frame(height: viewModel.graphType.isProgressChart ? 150 : 150)
                 //.padding()
@@ -144,22 +137,15 @@ struct ChartALLDistanceView: View {
                 //.chartYScale(domain: 0...100)
                 
             }
-            //Text("Average Tag Perf %: \(String(format: "%.0f", averageSales))")
-            //    .font(.custom("Arial", size: 16))
-            //    .foregroundColor(Color.red) // You can customize the color
-            //Text("Tag Response: \(String(format: "%.1f", averageSales)) Min/update")
-            //    .font(.custom("Arial", size: 18))
-            //    .foregroundColor(Color.green) // You can customize the color
-            //Text("Guidelines: 5 min/update is perfect")
-            //    .font(.custom("Arial", size: 14))
-            //Text("< 20 min/update is ideal")
-            //    .font(.custom("Arial", size: 14))
-            //    .foregroundColor(Color.brown) // You can customize the color
-           // HStack {
-            //if let chartData4.data = chartData5.data {
+        
+            DatePicker("Select a Date", selection: $selectedDate, displayedComponents: .date)
+            .datePickerStyle(.compact)
+            .padding()
+        
             SearchBar(text: $searchText)
             List {
                 ForEach(filteredChartData, id: \.serialNumber) { data in
+               //     NavigationLink(destination: ChartDistanceView(server: server,username: username,serialNumber: data.serialNumber, description: data.description, newdays: calculateDaysDifference)) {
                     NavigationLink(destination: ChartDistanceView(server: server,username: username,serialNumber: data.serialNumber, description: data.description)) {
                         VStack(alignment: .leading) {
                             Text("\(String(format: "%.1f", data.distance))km \(data.description)")
@@ -167,24 +153,38 @@ struct ChartALLDistanceView: View {
                         }
                     }
                 }
-            //}
-            //}
-            //}
-            //.padding(.bottom, 10)
-            //Text("Avg Minutes per iCloud Update: \(String(format: "%.0f", minutesPerICloudUpdate))")
-            //    .font(.custom("Arial", size: 16))
-            //    .foregroundColor(Color.blue) // You can customize the color
-            
-
         }
         .padding()
         .onAppear {
             fetchData()
         }
+        .onChange(of: selectedDate) {
+            fetchData()
+        }
+    }
+    
+    var formattedDate: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyyMMdd"
+        return dateFormatter.string(from: selectedDate)
+    }
+    
+    // calculate how many days the selectedDate is from todays date and pass 30+ that # to the ChartDistanceView
+    func calculateDaysDifference(selectedDate: Date) -> Int? {
+        let calendar = Calendar.current
+        let currentDate = Date()
+        let dateDifference = calendar.dateComponents([.day], from: selectedDate, to: currentDate).day
+
+        if let daysDifference = dateDifference {
+            return 30 - daysDifference
+        } else {
+            return nil
+        }
     }
 
+
     func fetchData() {
-        guard let url = URL(string: "https://\(server)/theme/chartAllDistance_api?username=\(username)&filter=''") else {
+        guard let url = URL(string: "https://\(server)/theme/chartAllDistance_api?username=\(username)&date=\(formattedDate)") else {
             return
         }
 
@@ -197,7 +197,7 @@ struct ChartALLDistanceView: View {
                     let decodedData = try JSONDecoder().decode([ChartData6].self, from: data)
                     DispatchQueue.main.async {
                         self.chartData6 = decodedData
-                        print("chartData5=\(chartData6)")
+                        //print("chartData5=\(chartData6)")
                     }
                 } catch {
                     print("Error decoding data: \(error.localizedDescription)")
@@ -206,5 +206,13 @@ struct ChartALLDistanceView: View {
         }.resume()
     }
 }
+extension DateFormatter {
+    static let yyyyMMdd: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyyMMdd"
+        return formatter
+    }()
+}
+
 
 
