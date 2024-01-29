@@ -125,7 +125,7 @@ struct ChartTagPerfView: View {
             }
 
             // Use a ScrollView to allow scrolling if there are many data points
-            ScrollView {
+            //ScrollView {
                 Chart(chartData3, id: \.name) { element in
 
 
@@ -144,31 +144,6 @@ struct ChartTagPerfView: View {
                             y: .value("Tag Perf %", element.sales)
                         )
                     }
-
-                    if viewModel.graphType.isProgressChart {
-                        BarMark(
-                            x: .value("Distance", element.sales),
-                            stacking: .normalized
-                        )
-                        .foregroundStyle(by: .value("Date", element.name))
-                        
-                    }
-
-                    if viewModel.graphType.isLineChart {
-
-                        LineMark(
-                        //    x: .value("Date", element.name),
-                        //    y: .value("Distance", element.sales)
-
-                            x: .value("Battery%", element.sales),
-                            y: .value("Date", element.name)
-                        )
-                        
-                        PointMark(
-                            x: .value("Date", element.name),
-                            y: .value("Distance", element.sales)
-                        )
-                    }
                     
                 }
                 // this is the chart title
@@ -178,7 +153,7 @@ struct ChartTagPerfView: View {
                         .font(.custom("Arial", size: 16))
                         .foregroundColor(Color.brown)
                 }
-                .frame(height: viewModel.graphType.isProgressChart ? 200 : 280)
+                .frame(height: viewModel.graphType.isProgressChart ? 150 : 150)
                 .padding()
                 .chartLegend(.hidden)
                 .chartYAxis {
@@ -189,7 +164,7 @@ struct ChartTagPerfView: View {
                     AxisMarks(position: .leading)
                 }
                 //.chartYScale(domain: 0...100)
-            }
+            //}
             Text("Average Response Time is: \(String(format: "%.1f", averageSales)) minutes")
                 .font(.custom("Arial", size: 16))
                 .foregroundColor(Color.brown) // You can customize the color
