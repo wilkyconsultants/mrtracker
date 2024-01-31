@@ -16,6 +16,8 @@ class ChartsViewModel8: ObservableObject {
     @Published var graphType: GraphType = GraphType()
 }
 
+
+//
 struct ChartData8: Codable, Identifiable {
     var id: UUID {
         return UUID()
@@ -44,13 +46,19 @@ struct ChartDayDistanceView: View {
     private let pdays = Array(1...365)
     @State private var days = 7  // default is 7 days of battery % data
     
-    @StateObject var viewModel = ChartsViewModel7()
+    @StateObject var viewModel = ChartsViewModel8()
     @State private var chartData8: [ChartData8] = []
     
     @State private var totalDistance: Double = 0
     
+    @State private var navigateToDetailView = false
+    
     var updateTotalDistance: Double {
         chartData8.reduce(0, { $0 + $1.distance })
+    }
+    
+    var StringupdateTotalDistance: String {
+        return String(updateTotalDistance)
     }
 
 
@@ -111,6 +119,25 @@ struct ChartDayDistanceView: View {
                 .bold()
                 .foregroundColor(Color.green)
                 .font(.custom("Arial", size: 22))
+            let emptyComment = Comments(description: "", battery_status: "", marker: "", distance: "", address: "", serialNumber: "\(serialNumber)", link: "", distance_from_home: "", ago: "")
+            
+            NavigationLink(destination: CommentDetailView(comment: emptyComment, server: server, username: username, distance: StringupdateTotalDistance, marker: "", ago: "", token: "", date: date), isActive: $navigateToDetailView) {
+                EmptyView()
+            }
+            .hidden()
+
+                Button("Generate Map") {
+                    navigateToDetailView = true
+                }
+                .buttonStyle(.bordered)
+                .controlSize(.large)
+                .foregroundColor(.white)
+                .background(Color.blue)
+                .cornerRadius(10)
+                .padding()
+
+            
+            
             Text("For Date: \(date)")
                 .bold()
                 .foregroundColor(Color.blue)
@@ -168,6 +195,7 @@ struct ChartDayDistanceView: View {
     }
     
 
+    
     func fetchData() {
         guard let url = URL(string: "https://\(server)/theme/chartDayDistance_api?serialNumber=\(serialNumber)&username=\(username)&date=\(date)") else {
             return
