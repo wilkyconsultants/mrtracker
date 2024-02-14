@@ -100,7 +100,6 @@ def map_battery_status(status):
         return "0%"
 
 def process_data(data):
-    #client_ID = "20240000001"
     results = []
     for item in data:
         try:
