@@ -114,7 +114,7 @@ def process_data(data):
             now = datetime.now()
             D = now.strftime("%Y-%m-%d_%H:%M:%S")
             D_DIFF = round((datetime.now() - D_LAST_UPDATE).total_seconds() / 60)
-            LAST_UPDATE = "✔️" if D_DIFF <= 5 else "✅" if D_DIFF <= 59 else "❌"
+            LAST_UPDATE = "✅" if D_DIFF <= 5 else "✔️"" if D_DIFF <= 59 else "❌"
             SERIAL = SERIAL.upper()
             username = getpass.getuser()            
             json_data = {
