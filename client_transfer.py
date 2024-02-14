@@ -1,7 +1,7 @@
 ##########################################################################################################
 # Purpose:    transfer airtag data via API so you can use MR Tracker iOS app to visualize it
 # Date:       Feb 14, 2024
-# Version:    1.0 βeta
+# Version:    1.1 βeta
 # Written by: Rob Wilkinson
 # Company:    Wilky Consultants Inc.
 # Use:        Tag data will be collected for a free 1 week trial period and after that time a small subscription 
@@ -23,7 +23,6 @@
 #   Install support modules:
 #   - install json with "pip3 install json"
 #   - install requests with "pip3 install requests"
-#   - install urllib with "pip3 install urllib3==1.26.6"
 #
 #  To grant full disk access to the Terminal program on a Mac, you can follow these steps:
 #    Open "System Preferences" and click on "Security & Privacy"
@@ -33,10 +32,6 @@
 #    Once the Terminal program is added, it will have full disk access.
 #    Following these steps will grant the Terminal program full disk access on your Mac.
 #    ** if unable to figure this out PM Rob and I will help :) **
-#
-#  if get error : Error loading data from file /Users/XXXXXXX/Library/Caches/com.apple.findmy.fmipcore/Items.data: [Errno 1] 
-#                 Operation not permitted: '/Users/XXXXXX/Library/Caches/com.apple.findmy.fmipcore/Items.data'
-#   - you will need to grant access to cron and python3 for the "Full Disk Access" same as you did for Terminal
 #
 #  Change permissions of the script:
 #    chmod 775 client_transfer.py
@@ -48,7 +43,7 @@
 #    crontab -e  # update the job to run every 5 minutes
 #    Insert line, and save:
 #    0,5,10,15,20,25,30,35,40,45,50,55 * * * * /PATH/python3 ~/client_transfer.py >/dev/null 2>&1
-#    Change PATH above to the path of your python3 binary. You determine this with "which python3" command
+#    Change PATH above to the path of your python3 binary. You determine this with "python3 -V" command
 #    Assumes your client_transfer.py is in your home directory, if not adjust it!
 
 import requests
@@ -114,6 +109,7 @@ def process_data(data):
             now = datetime.now()
             D = now.strftime("%Y-%m-%d_%H:%M:%S")
             D_DIFF = round((datetime.now() - D_LAST_UPDATE).total_seconds() / 60)
+            #LAST_UPDATE = "✔️" if D_DIFF <= 5 else "✅" if D_DIFF <= 59 else "❌"
             LAST_UPDATE = "✅" if D_DIFF <= 5 else "✔️" if D_DIFF <= 59 else "❌"
             SERIAL = SERIAL.upper()
             username = getpass.getuser()            
@@ -147,6 +143,7 @@ def send_data(url, json_data):
         return None
 
 def main():
+    # replacd robwilk with your id
     username = getpass.getuser() 
     file_path = '/Users/'+username+'/Library/Caches/com.apple.findmy.fmipcore/Items.data'
     port = '8443'
@@ -157,8 +154,7 @@ def main():
         for json_data in processed_data:
             status_code = send_data(url, json_data)
             if status_code is not None:
-                print(f"Interval: {json_data['date_time']} Ser: {json_data['serialnumber']} - status: {status_code} Updated: {json_data['LAST_UPDATE']}")
+                print(f"Interval: {json_data['date_time']} Ser: {json_data['serialnumber']} - stat: {status_code} {json_data['LAST_UPDATE']} Upd: {json_data['lastupdate']}")
 
 if __name__ == "__main__":
     main()
-
