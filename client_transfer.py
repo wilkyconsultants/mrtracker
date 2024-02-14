@@ -32,6 +32,10 @@
 #    Following these steps will grant the Terminal program full disk access on your Mac.
 #    ** if unable to figure this out PM Rob and I will help :) **
 #
+#  if get error : Error loading data from file /Users/XXXXXXX/Library/Caches/com.apple.findmy.fmipcore/Items.data: [Errno 1] 
+#                 Operation not permitted: '/Users/XXXXXX/Library/Caches/com.apple.findmy.fmipcore/Items.data'
+#   - you will need to grant access to cron for the "Full Disk Access" same as you did for Temrinal
+#
 #  Change permissions of the script:
 #    chmod 775 client_transfer.py
 #
