@@ -1,8 +1,19 @@
-#!/Library/Frameworks/Python.framework/Versions/3.9/bin/python3
+##########################################################################################################
+# Purpose:    transfer airtag data via API so you can use MR Tracker iOS app to visualize it
+# Date:       Feb 14, 2024
+# Written by: Rob Wilkinson
+# Company:    Wilky Consultants Inc.
+# Use:        Tag data will be collected for a free 1 week trial period and after that time a small subscription 
+#             fee per tag is requested to assist in paying for back-end hardware, support
+#             and software costs. This fee can be paid by EMT for 1 yr subscription is $50, renews once a year.
+#             Subscription can stop any time requested.
 #
-###########################################
+# Customization requests: All of this and more can be customized for your needs by engaging Rob Wilkinson
+#                         Send email to MrTracker.416@gmail.com for a quote and timeline of your customizations
+#
+##########################################################################################################
 #  SET UP required to use this script:
-###########################################
+######################################
 #  Change first line to where your python is installed : run 
 #     which python3
 #  - if no python3 installed:
@@ -20,13 +31,26 @@
 #    Once the Terminal program is added, it will have full disk access.
 #    Following these steps will grant the Terminal program full disk access on your Mac.
 #    ** if unable to figure this out PM Rob and I will help :) **
+#
 #  Change permissions of the script:
 #    chmod 775 client_transfer.py
+#
+# for testing how to run:
+#     python3 ./client_transfer.py
+#
+# For production how to run:
+#    crontab -e  # update the job to run every 5 minutes
+#    Insert line, and save:
+#    0,5,10,15,20,25,30,35,40,45,50,55 * * * * /PATH/python3 ~/client_transfer.py >/dev/null 2>&1
+#    Change PATH above to the path of your python3 binary. You determine this with "python3 -V" command
+#    Assumes your client_transfer.py is in your home directory, if not adjust it!
 
 import requests
 import json
 from datetime import datetime
 import getpass
+
+client_ID = "20240000001"
 
 class DateTimeEncoder(json.JSONEncoder):
     def default(self, o):
@@ -70,6 +94,7 @@ def map_battery_status(status):
         return "0%"
 
 def process_data(data):
+    #client_ID = "20240000001"
     results = []
     for item in data:
         try:
@@ -88,6 +113,7 @@ def process_data(data):
             SERIAL = SERIAL.upper()
             username = getpass.getuser()            
             json_data = {
+                'client_ID': client_ID,
                 'username': username,
                 'type': tag_type,
                 'serialnumber': SERIAL,
@@ -131,3 +157,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
