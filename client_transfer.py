@@ -157,7 +157,7 @@ def main():
         for json_data in processed_data:
             status_code = send_data(url, json_data)
             if status_code is not None:
-                print(f"Date/time: {json_data['date_time']} Serial Number: {json_data['serialnumber']} - HTTP status code: {status_code}")
+                print(f"Interval: {json_data['date_time']} Ser: {json_data['serialnumber']} - status: {status_code} Updated: {json_data['LAST_UPDATE']}")
 
 if __name__ == "__main__":
     main()
