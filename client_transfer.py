@@ -34,7 +34,7 @@
 #
 #  if get error : Error loading data from file /Users/XXXXXXX/Library/Caches/com.apple.findmy.fmipcore/Items.data: [Errno 1] 
 #                 Operation not permitted: '/Users/XXXXXX/Library/Caches/com.apple.findmy.fmipcore/Items.data'
-#   - you will need to grant access to cron for the "Full Disk Access" same as you did for Temrinal
+#   - you will need to grant access to cron and python3 for the "Full Disk Access" same as you did for Terminal
 #
 #  Change permissions of the script:
 #    chmod 775 client_transfer.py
