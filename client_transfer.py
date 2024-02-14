@@ -102,6 +102,8 @@ def process_data(data):
             LAT = str(round(item['location']['latitude'], 5))
             LONG = str(round(item['location']['longitude'], 5))
             SERIAL, tag_type = map_serial(item['serialNumber'].upper())
+            emoji = item['role']['emoji'] 
+            name = item['name']
             BATTERYSTATUS = map_battery_status(str(item['batteryStatus']))
             MAPFULLADDRESS = item['address'].get('mapItemFullAddress', '')
             MAPFULLADDRESS = MAPFULLADDRESS.replace("'", "")
@@ -109,6 +111,7 @@ def process_data(data):
             now = datetime.now()
             D = now.strftime("%Y-%m-%d_%H:%M:%S")
             D_DIFF = round((datetime.now() - D_LAST_UPDATE).total_seconds() / 60)
+            #LAST_UPDATE = "✔️" if D_DIFF <= 5 else "✅" if D_DIFF <= 59 else "❌"
             LAST_UPDATE = "✅" if D_DIFF <= 5 else "✔️" if D_DIFF <= 59 else "❌"
             SERIAL = SERIAL.upper()
             username = getpass.getuser()            
@@ -126,6 +129,8 @@ def process_data(data):
                 'FULL_serialnumber': item['serialNumber'],
                 'MAPFULLADDRESS': MAPFULLADDRESS,
                 'BATTERYSTATUS': BATTERYSTATUS,
+                'emoji': emoji,
+                'name': name,
             }
             results.append(json_data)
         except Exception as e:
@@ -153,7 +158,7 @@ def main():
         for json_data in processed_data:
             status_code = send_data(url, json_data)
             if status_code is not None:
-                print(f"Interval: {json_data['date_time']} Ser: {json_data['serialnumber']} - stat: {status_code} {json_data['LAST_UPDATE']} Upd: {json_data['lastupdate']}")
+                print(f"Interval: {json_data['date_time']} Ser: {json_data['serialnumber']} - stat: {status_code} {json_data['LAST_UPDATE']} Upd: {json_data['lastupdate']} emoji: {json_data['emoji']} Name: {json_data['name']}")
 
 if __name__ == "__main__":
     main()
