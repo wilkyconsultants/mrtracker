@@ -147,7 +147,6 @@ def send_data(url, json_data):
         return None
 
 def main():
-    # replacd robwilk with your id
     username = getpass.getuser() 
     file_path = '/Users/'+username+'/Library/Caches/com.apple.findmy.fmipcore/Items.data'
     port = '8443'
