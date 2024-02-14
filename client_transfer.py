@@ -22,6 +22,7 @@
 #   Install support modules:
 #   - install json with "pip3 install json"
 #   - install requests with "pip3 install requests"
+#   - install urllib with "pip3 install urllib3==1.26.6"
 #
 #  To grant full disk access to the Terminal program on a Mac, you can follow these steps:
 #    Open "System Preferences" and click on "Security & Privacy"
