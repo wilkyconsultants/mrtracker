@@ -1,9 +1,10 @@
 ##########################################################################################################
 # Purpose:    transfer airtag data via API so you can use MR Tracker iOS app to visualize it
 # Date:       Feb 14, 2024
-# Version:    1.3 βeta
+# Version:    1.4 βeta
 # Written by: Rob Wilkinson
 # Changes:    1.3 - Add icloud ID
+#             1.4 - updated install procedures
 # Company:    Wilky Consultants Inc.
 # Use:        Tag data will be collected for a free 1 week trial period and after that time a small subscription 
 #             fee per tag is requested to assist in paying for back-end hardware, support
