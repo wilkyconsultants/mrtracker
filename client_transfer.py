@@ -44,8 +44,8 @@
 # For production how to run:
 #    crontab -e  # update the job to run every 5 minutes
 #    Insert line, and save:
-#    0,5,10,15,20,25,30,35,40,45,50,55 * * * * /PATH/python3 ~/client_transfer.py >/dev/null 2>&1
-#    Change PATH above to the path of your python3 binary. You determine this with "python3 -V" command
+#    0,5,10,15,20,25,30,35,40,45,50,55 * * * * /usr/bin/python3 ~/client_transfer.py >/dev/null 2>&1
+#    Change /usr/bin above to the path of your python3 binary. You determine this with "which python3" command
 #    Assumes your client_transfer.py is in your home directory, if not adjust it!
 
 import requests
