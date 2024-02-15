@@ -1,9 +1,9 @@
 ##########################################################################################################
 # Purpose:    transfer airtag data via API so you can use MR Tracker iOS app to visualize it
 # Date:       Feb 14, 2024
-# Changes:    Feb 15, 2024 - added "pip3 install urllib3==1.26.15"
-# Version:    1.2 βeta
+# Version:    1.3 βeta
 # Written by: Rob Wilkinson
+# Changes:    1.3 - Add icloud ID
 # Company:    Wilky Consultants Inc.
 # Use:        Tag data will be collected for a free 1 week trial period and after that time a small subscription 
 #             fee per tag is requested to assist in paying for back-end hardware, support
@@ -16,7 +16,7 @@
 ##########################################################################################################
 #  SET UP required to use this script:
 ######################################
-#  Check your python3 binary is installed : run 
+#  Change first line to where your python is installed : run 
 #     which python3
 #  - if no python3 installed:
 #    - download the Python 3 installer from the official Python website and follow the installation instructions and install
@@ -24,7 +24,6 @@
 #   Install support modules:
 #   - install json with "pip3 install json"
 #   - install requests with "pip3 install requests"
-#   - install url3 with "pip3 install urllib3==1.26.15"
 #
 #  To grant full disk access to the Terminal program on a Mac, you can follow these steps:
 #    Open "System Preferences" and click on "Security & Privacy"
@@ -44,8 +43,8 @@
 # For production how to run:
 #    crontab -e  # update the job to run every 5 minutes
 #    Insert line, and save:
-#    0,5,10,15,20,25,30,35,40,45,50,55 * * * * /usr/bin/python3 ~/client_transfer.py >/dev/null 2>&1
-#    Change /usr/bin above to the path of your python3 binary. You determine this with "which python3" command
+#    0,5,10,15,20,25,30,35,40,45,50,55 * * * * /PATH/python3 ~/client_transfer.py >/dev/null 2>&1
+#    Change PATH above to the path of your python3 binary. You determine this with "python3 -V" command
 #    Assumes your client_transfer.py is in your home directory, if not adjust it!
 
 import requests
@@ -97,6 +96,17 @@ def map_battery_status(status):
         return "0%"
 
 def process_data(data):
+#   Get the icloud ID
+    icloud_ID="None"
+    import subprocess
+    result = subprocess.run(["defaults", "read", "MobileMeAccounts", "Accounts"], capture_output=True, text=True)
+    output_lines = result.stdout.split('\n')
+    account_lines = [line for line in output_lines if "AccountID" in line]
+    account_ids = [line.split()[2] for line in account_lines]
+    cleaned_account_ids = [account_id.replace('"', '').replace(';', '') for account_id in account_ids]
+    for account_id in cleaned_account_ids:
+        icloud_ID=account_id
+#
     results = []
     for item in data:
         try:
@@ -132,6 +142,7 @@ def process_data(data):
                 'BATTERYSTATUS': BATTERYSTATUS,
                 'emoji': emoji,
                 'name': name,
+                'icloud_ID': icloud_ID,
             }
             results.append(json_data)
         except Exception as e:
@@ -148,7 +159,6 @@ def send_data(url, json_data):
         return None
 
 def main():
-    # replacd robwilk with your id
     username = getpass.getuser() 
     file_path = '/Users/'+username+'/Library/Caches/com.apple.findmy.fmipcore/Items.data'
     port = '8443'
