@@ -155,8 +155,11 @@ def process_data(data):
             print(f"Error processing item: {e}")
     return results
 
-def send_data(url, json_data):
-    headers = {'Content-type': 'application/json', 'HTTPMRTRACKER': json.dumps(json_data, cls=DateTimeEncoder)}
+def send_data(url, json_data,port):
+    if port == '':
+       headers = {'Content-type': 'application/json', 'HTTPMRTRACKER': json.dumps(json_data, cls=DateTimeEncoder)}
+    else:
+       headers = {'Content-type': 'application/json', 'HTTP_HTTPMRTRACKER': json.dumps(json_data, cls=DateTimeEncoder)}
     try:
         response = requests.post(url, headers=headers)
         return response.status_code
@@ -167,13 +170,14 @@ def send_data(url, json_data):
 def main():
     username = getpass.getuser() 
     file_path = '/Users/'+username+'/Library/Caches/com.apple.findmy.fmipcore/Items.data'
-    port = ''
+    port = ''        # production
+    #port = ':8443'  # test
     url = 'https://mrrobby.ca'+port+'/theme/AcceptFile_api'
     data = load_data(file_path)
     if data:
         processed_data = process_data(data)
         for json_data in processed_data:
-            status_code = send_data(url, json_data)
+            status_code = send_data(url, json_data,port)
             if status_code is not None:
                 print(f"{status_code} {json_data['date_time']} {json_data['serialnumber']} {json_data['LAST_UPDATE']} {json_data['lastupdate']} {json_data['emoji']} {json_data['name']}")
 
