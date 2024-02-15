@@ -13,6 +13,10 @@
 # Customization requests: All of this and more can be customized for your needs by engaging Rob Wilkinson
 #                         Send email to MrTracker.416@gmail.com for a quote and timeline of your customizations
 #
+# IMPORTANT: change to provided client ID
+#
+client_ID = "20240000001"
+#
 ##########################################################################################################
 #  SET UP required to use this script:
 ######################################
@@ -43,16 +47,14 @@
 # For production how to run:
 #    crontab -e  # update the job to run every 5 minutes
 #    Insert line, and save:
-#    0,5,10,15,20,25,30,35,40,45,50,55 * * * * /PATH/python3 ~/client_transfer.py >/dev/null 2>&1
-#    Change PATH above to the path of your python3 binary. You determine this with "python3 -V" command
+#    0,5,10,15,20,25,30,35,40,45,50,55 * * * * /usr/bin/python3 ~/client_transfer.py >/dev/null 2>&1
+#    Change /usr/bin above to the path of your python3 binary. You determine this with "which python3" command
 #    Assumes your client_transfer.py is in your home directory, if not adjust it!
 
 import requests
 import json
 from datetime import datetime
 import getpass
-
-client_ID = "20240000001"
 
 class DateTimeEncoder(json.JSONEncoder):
     def default(self, o):
