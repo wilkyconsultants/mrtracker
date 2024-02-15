@@ -38,6 +38,8 @@ client_ID = "20240000001"
 #    Following these steps will grant the Terminal program full disk access on your Mac.
 #    ** if unable to figure this out PM Rob and I will help :) **
 #
+#  Start findmy on your mac to init the Items.data file where your tags cache is located
+#
 #  Change permissions of the script:
 #    chmod 775 client_transfer.py
 #
