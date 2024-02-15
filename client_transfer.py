@@ -31,6 +31,8 @@ client_ID = "20240000001"
 #   - install url with "pip3 install urllib3==1.26.15"
 #   - install requests with "pip3 install requests"
 #
+#   Start findmy on your mac to let it create the cache files that we will pull from with this script
+#
 #  To grant full disk access to the Terminal program on a Mac, you can follow these steps:
 #    Open "System Preferences" and click on "Security & Privacy"
 #    Select the "Privacy" tab, then choose "Full Disk Access" from the left-hand menu
