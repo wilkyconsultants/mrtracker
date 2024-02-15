@@ -13,6 +13,8 @@
 # Customization requests: All of this and more can be customized for your needs by engaging Rob Wilkinson
 #                         Send email to MrTracker.416@gmail.com for a quote and timeline of your customizations
 #
+# Happy to help is any consulting engagement in Linux, Unix, web, iOS, Windows, python, django... and much more, just ask
+#
 # IMPORTANT: change to provided client ID
 #
 client_ID = "20240000001"
