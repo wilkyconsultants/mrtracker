@@ -1,10 +1,9 @@
 ##########################################################################################################
 # Purpose:    transfer airtag data via API so you can use MR Tracker iOS app to visualize it
 # Date:       Feb 14, 2024
-# Version:    1.4 βeta
+# Version:    1.3 βeta
 # Written by: Rob Wilkinson
 # Changes:    1.3 - Add icloud ID
-#             1.4 - updated install procedures
 # Company:    Wilky Consultants Inc.
 # Use:        Tag data will be collected for a free 1 week trial period and after that time a small subscription 
 #             fee per tag is requested to assist in paying for back-end hardware, support
@@ -21,7 +20,7 @@ client_ID = "20240000001"
 ##########################################################################################################
 #  SET UP required to use this script:
 ######################################
-#  see if python is installed : run 
+#  Change first line to where your python is installed : run 
 #     which python3
 #  - if no python3 installed:
 #    - download the Python 3 installer from the official Python website and follow the installation instructions and install
@@ -38,8 +37,6 @@ client_ID = "20240000001"
 #    Once the Terminal program is added, it will have full disk access.
 #    Following these steps will grant the Terminal program full disk access on your Mac.
 #    ** if unable to figure this out PM Rob and I will help :) **
-#
-#  Start findmy on your mac to init the Items.data file where your tags cache is located
 #
 #  Change permissions of the script:
 #    chmod 775 client_transfer.py
@@ -181,3 +178,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
