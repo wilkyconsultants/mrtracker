@@ -131,6 +131,7 @@ def process_data(data):
             LAST_UPDATE = "✅" if D_DIFF <= 5 else "✔️" if D_DIFF <= 59 else "❌"
             SERIAL = SERIAL.upper()
             username = getpass.getuser()            
+            formatted_date = D_LAST_UPDATE.strftime("%Y-%m-%d %H:%M:%S")
             json_data = {
                 'client_ID': client_ID,
                 'username': username,
@@ -139,7 +140,7 @@ def process_data(data):
                 'date_time': D,
                 'latitude': float(LAT),
                 'longitude': float(LONG),
-                'lastupdate': D_LAST_UPDATE.isoformat(),
+                'lastupdate': formatted_date,
                 'ago': f"{D_DIFF} Min",
                 'LAST_UPDATE': LAST_UPDATE,
                 'FULL_serialnumber': item['serialNumber'],
@@ -178,4 +179,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
