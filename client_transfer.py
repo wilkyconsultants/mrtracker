@@ -22,7 +22,7 @@
 #    - download the Python 3 installer from the official Python website and follow the installation instructions and install
 #      https://www.python.org/downloads/release/python-3122/
 #   Install support modules:
-#   - install json with "pip3 install json"
+#   - install url with "pip3 install urllib3==1.26.15"
 #   - install requests with "pip3 install requests"
 #
 #  To grant full disk access to the Terminal program on a Mac, you can follow these steps:
