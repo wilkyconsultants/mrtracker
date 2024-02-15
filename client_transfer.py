@@ -20,7 +20,7 @@ client_ID = "20240000001"
 ##########################################################################################################
 #  SET UP required to use this script:
 ######################################
-#  Change first line to where your python is installed : run 
+#  see if python is installed : run 
 #     which python3
 #  - if no python3 installed:
 #    - download the Python 3 installer from the official Python website and follow the installation instructions and install
