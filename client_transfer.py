@@ -155,7 +155,7 @@ def process_data(data):
     return results
 
 def send_data(url, json_data):
-    headers = {'Content-type': 'application/json', 'HTTP_MR_TRACKER_DATA': json.dumps(json_data, cls=DateTimeEncoder)}
+    headers = {'Content-type': 'application/json', 'HTTPMRTRACKER': json.dumps(json_data, cls=DateTimeEncoder)}
     try:
         response = requests.post(url, headers=headers)
         return response.status_code
@@ -166,8 +166,8 @@ def send_data(url, json_data):
 def main():
     username = getpass.getuser() 
     file_path = '/Users/'+username+'/Library/Caches/com.apple.findmy.fmipcore/Items.data'
-    port = '8443'
-    url = 'https://mrrobby.ca:'+port+'/theme/AcceptFile_api'
+    port = ''
+    url = 'https://mrrobby.ca'+port+'/theme/AcceptFile_api'
     data = load_data(file_path)
     if data:
         processed_data = process_data(data)
