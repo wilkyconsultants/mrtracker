@@ -1,7 +1,8 @@
 ##########################################################################################################
 # Purpose:    transfer airtag data via API so you can use MR Tracker iOS app to visualize it
 # Date:       Feb 14, 2024
-# Version:    1.1 βeta
+# Changes:    Feb 15, 2024 - added "pip3 install urllib3==1.26.15"
+# Version:    1.2 βeta
 # Written by: Rob Wilkinson
 # Company:    Wilky Consultants Inc.
 # Use:        Tag data will be collected for a free 1 week trial period and after that time a small subscription 
@@ -23,6 +24,7 @@
 #   Install support modules:
 #   - install json with "pip3 install json"
 #   - install requests with "pip3 install requests"
+#   - install url3 with "pip3 install urllib3==1.26.15"
 #
 #  To grant full disk access to the Terminal program on a Mac, you can follow these steps:
 #    Open "System Preferences" and click on "Security & Privacy"
