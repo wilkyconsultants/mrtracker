@@ -16,6 +16,8 @@
 # IMPORTANT: change to provided client ID, PM Rob W for your ID
 #
 client_ID = "202400001"
+#port = ''        # production after verified as working and ready to collect data
+port = ':8443'    # test initially until working
 #
 ##########################################################################################################
 #  SET UP required to use this script:
@@ -172,8 +174,6 @@ def send_data(url, json_data,port):
 def main():
     username = getpass.getuser() 
     file_path = '/Users/'+username+'/Library/Caches/com.apple.findmy.fmipcore/Items.data'
-    port = ''        # production
-    #port = ':8443'  # test
     url = 'https://mrrobby.ca'+port+'/theme/AcceptFile_api'
     data = load_data(file_path)
     if data:
