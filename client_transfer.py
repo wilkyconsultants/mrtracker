@@ -5,19 +5,16 @@
 # Written by: Rob Wilkinson
 # Changes:    1.3 - Add icloud ID
 # Company:    Wilky Consultants Inc.
-# Use:        Tag data will be collected for a free 1 week trial period and after that time a small subscription 
-#             fee per tag is requested to assist in paying for back-end hardware, support
-#             and software costs. This fee can be paid by EMT for 1 yr subscription is $50, renews once a year.
-#             Subscription can stop any time requested.
 #
 # Customization requests: All of this and more can be customized for your needs by engaging Rob Wilkinson
 #                         Send email to MrTracker.416@gmail.com for a quote and timeline of your customizations
 #
-# Happy to help is any consulting engagement in Linux, Unix, web, iOS, Windows, python, django... and much more, just ask
+#                         Happy to help is any consulting engagement in Linux, Unix, web, iOS, Windows, python, django... 
+#                         and much more, just ask
 #
-# IMPORTANT: change to provided client ID
+# IMPORTANT: change to provided client ID, PM Rob W for your ID
 #
-client_ID = "20240000001"
+client_ID = "202400001"
 #
 ##########################################################################################################
 #  SET UP required to use this script:
