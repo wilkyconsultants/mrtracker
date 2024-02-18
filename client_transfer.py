@@ -15,7 +15,7 @@
 #
 # IMPORTANT: change to provided client ID, PM Rob W for your ID
 #
-client_ID = "202400001"
+client_ID = "202402001"
 #port = ''        # production after verified as working and ready to collect data
 port = ':8443'    # test initially until working
 #
