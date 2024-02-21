@@ -1,0 +1,32 @@
+-- Make the "Find My Device" the focus screen to refresh info
+tell application "System Events" to tell process "Find My"
+    delay 1
+    tell application "System Events" to activate process "Find My"
+    set frontmost to true
+    windows where title contains "Find My"
+    delay 1
+    -- Command J to set focus to allow next commands in menu
+    -- keystroke "j" using {command down}
+    -- Press Command-2 for Devices
+    #tell application "System Events" to key code 19 using {command down}
+    tell application "System Events"
+        keystroke "-" using {command down}
+    end tell
+    delay 1
+    tell application "System Events"
+        keystroke "+" using {command down}
+    end tell
+    delay 1
+    -- Press Command-3 for Items
+    tell application "System Events" to key code 20 using {command down}
+    delay 1
+    -- Monterey: fn F - Exit or Enter full screen ** NOTE  - Control + Command + F key on Pre-Monterey MacOS
+    tell application "System Events"
+        keystroke "f" using {command down, control down}
+    end tell
+    # wait 60 sec and quite findmy
+    delay 60 
+    #tell application "System Events"
+    #    keystroke "q" using {command down}
+    #end tell
+end tell
