@@ -1,0 +1,1 @@
+do shell script "nohup open -a /System/Applications/FindMy.app"  -- Run the FindMy app
