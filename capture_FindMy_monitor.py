@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 #
+# change first line of script to where your python is actually installed "which python3"
+#
 # Written By:   Rob Wilkinson
 # Date Written: Dec 26, 2022
 # Purpose:
