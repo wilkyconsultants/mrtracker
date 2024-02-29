@@ -13,14 +13,14 @@
 #                         Happy to help in any consulting engagement in Linux, Unix, web, iOS, Android, Windows, python, django... 
 #                         and much more, just ask
 #
-# IMPORTANT: change to provided client ID, PM Rob W for your ID
+# 
 #
-client_ID = "202402001"
+client_ID = "202402002"
 #port = ''        # production after verified as working and ready to collect data
 port = ':8443'    # test initially until working
 #
-##########################################################################################################
-#  SET UP required to use this script:
+######################################
+#  SET UP required to use this script - follow these instructions and PM Rob when questions, 1 time set up
 ######################################
 #  Determine if python3 is installed : run 
 #     which python3
@@ -31,16 +31,17 @@ port = ':8443'    # test initially until working
 #   - install url with "pip3 install urllib3==1.26.15"
 #   - install requests with "pip3 install requests"
 #
-#   Start findmy on your mac to let it create the cache files that we will pull from with this script
+#  Important: This script will only work with MacOS versions 11.5 through 14.3.1 (not 14.4+ so don't even try it in that case)
+#  Important: Start findmy on your mac to let it create the cache files that we will pull from with this script
 #
-#  To grant full disk access to the Terminal program on a Mac, you can follow these steps:
+#  It may be necessary to grant full disk access to the Terminal program on a Mac, you can follow these steps:
 #    Open "System Preferences" and click on "Security & Privacy"
 #    Select the "Privacy" tab, then choose "Full Disk Access" from the left-hand menu
 #    Click the lock icon at the bottom left to make changes, then enter your system administrator password
 #    Click the "+" button, then navigate to and select the Terminal program
 #    Once the Terminal program is added, it will have full disk access.
 #    Following these steps will grant the Terminal program full disk access on your Mac.
-#    ** if unable to figure this out PM Rob and I will help :) **
+#    ** if unable to figure this out PM Rob or google it as it is a very common task to do on your mac **
 #
 #  Change permissions of the script:
 #    chmod 775 client_transfer.py
