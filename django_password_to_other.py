@@ -1,4 +1,4 @@
-#!/uar/bin/python3
+#!/usr/bin/python3
 # Purpose:
 #   I have django app, My specification is that when I create user with django admin, 
 #   I want to give username and password to someone else but in the time of logging in to 
