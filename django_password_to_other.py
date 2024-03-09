@@ -4,8 +4,11 @@
 #   I want to give username and password to someone else but in the time of logging in to 
 #   the app with the provided credentials, the app will ask him or her to change password direct. how to achieve that in django?
 # Solution:
-#  You can achieve this in Django by customizing the authentication process using signals and views. Here's a general outline of how you can implement this:
-#  Customize User Creation Signal: You'll want to listen for the post_save signal from the User model to trigger an action after a new user is created. When a new user is created via Django admin, you can send the username and temporary password to the designated person.
+#  You can achieve this in Django by customizing the authentication process using signals and views. 
+#  Here's a general outline of how you can implement this:
+#  Customize User Creation Signal: You'll want to listen for the post_save signal from the User model to 
+#  trigger an action after a new user is created. When a new user is created via Django admin, you can send the username 
+#  and temporary password to the designated person.
 
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
